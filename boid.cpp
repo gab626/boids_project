@@ -1,60 +1,52 @@
 #include "boid.hpp"
 
-#include <cmath>
-#include <random>
-#include <numeric>  //ancora non ho usato accumulate
+#include "functions.hpp"
 
-array2 bd::operator+(array2 const& v1, array2 const& v2) {
-  double x = v1[0] + v2[0];
-  double y = v1[1] + v2[1];
-  return array2{x, y};
-};
+bd::Flight::Flight() {}
 
-array2 bd::operator*(double c, array2 const& v) {
-  double x = c * v[0];
-  double y = c * v[1];
-  return array2{x, y};
-};
-
-double bd::norm(array2 v) {
-  double x2 = v[0] * v[0];
-  double y2 = v[1] * v[1];
-  return std::sqrt(x2 + y2);
-};
-
-double bd::Boid::setPosition() {
-  std::random_device eng;  // default random engine non funziona?
-  std::uniform_int_distribution<> uniform(0, 1000);
-  return uniform(eng);
+double bd::Flight::distance(Boid const& b1, Boid const& b2) {
+  return bd::norm(b1.position - b2.position);
 }
 
-bd::Boid::Boid() {
-  position_[0] = setPosition();
-  position_[1] = setPosition();
-};
+std::array<double, 2> bd::Flight::vSeparation(Boid const& b1, Boid const& b2) {
+  std::array<double, 2> v{0, 0};
+  if (distance(b1, b2) < par_.ds) {
+    v = (-1) * par_.s * (b1.position - b2.position);
+  }
+  return v;
+}
 
-double bd::Boid::getX() const { return position_[0]; };
+std::array<double, 2> bd::Flight::vAlignment(Boid const& b1, Boid const& b2) {
+  std::array<double, 2> v{0, 0};
+  if (distance(b1, b2) < par_.d) {  // può essere portato fuori (in evolve)
+    v = par_.a * (1 / (nBoids_ - 1)) * (b1.velocity - b2.velocity);
+  }
+  return v;
+}
 
-double bd::Boid::getY() const { return position_[1]; };
+std::array<double, 2> bd::Flight::vCohesion(Boid const& b1, Boid const& b2) {
+  std::array<double, 2> v{0, 0};
+  if (distance(b1, b2) < par_.d) {
+    std::array<double, 2> x = (1 / (nBoids_ - 1)) * b2.position;
+    v = par_.c * (x - b1.position);
+  }
+  return v;
+}
 
-double bd::Boid::distance(Boid const& b) const {
-  return norm(this->position_ + (-1) * b.position_);
-};
-//inizializzando i parametri di v1 v2 v3 a caso
-/* array2 bd::Boid::vSeparation(Boid const& b) {
-  if (this->distance(b) < ds) {
-    array2 v1 = -1 * s * (this->position_ + (-1) * b.position_);
-    return v1;
-  } else return {0,0};
-};  //SBAGLIATA
+void bd::Flight::evolve() {
+  for (int i{}; i < nBoids_; i++) {
+    for (int j{}; j != i && j < nBoids_; j++) {
+      newVelocities_[i] =
+          newVelocities_[i] + vSeparation(flock_[i], flock_[j]) +
+          vAlignment(flock_[i], flock_[j]) + vCohesion(flock_[i], flock_[j]);
+          newPositions_[i] = newPositions_[i] + (0.1 * flock_[i].velocity);
+    }
+  }
+}
 
-array2 bd::Boid::vAlignment(Boid const& b) {};
-array2 bd::Boid::vCohesion(Boid const& b) {}; */
-
-void bd::Boid::flight() {  // velocità fissate per ora
-  position_ = position_ + velocity_;  // rivedere overload (esempio nelle slides)
-};
-
-void bd::Boid::reverseVx() { velocity_[0] = -1 * velocity_[0]; };
-
-void bd::Boid::reverseVy() { velocity_[1] *= -1 * velocity_[1]; };
+void bd::Flight::update() {
+    for (int i{}; i < nBoids_; i++) {
+        flock_[i].position = newPositions_[i];
+        flock_[i].velocity = newVelocities_[i];
+    }
+}
