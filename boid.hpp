@@ -11,30 +11,30 @@ struct Boid {
 };
 
 struct Parameters {
-  double d = 200;  // parametri temporanei fissati
-  double ds = 50;
-  double s = 2;
-  double a = .5;
-  double c = .1;  // manca delta_t
+  double d = 300;  // parametri temporanei fissati
+  double ds = 10;
+  double s = 10;
+  double a = .01;
+  double c = .001;  // manca delta_t
 };
 
 class Flight {  // inizializzare membri  //class che prima o poi verrà
                 // decomposta
  public:  //TUTTO IN PUBLIC PER ORA
   Parameters par_;
-  int nBoids_ = 20;  // fissato per ora
-  std::array<std::array<double, 2>, 20> newPositions_;
-  std::array<std::array<double, 2>, 20> newVelocities_;
-  std::array<double, 2> vSeparation(Boid const&, Boid const&);
-  std::array<double, 2> vAlignment(Boid const&, Boid const&);
-  std::array<double, 2> vCohesion(Boid const&, Boid const&);
-  void reverseV(Boid&);
+  static const int nBoids_ = 20;  //soluzione temporanea
+  std::array<std::array<double, 2>, nBoids_> newPositions_;
+  std::array<std::array<double, 2>, nBoids_> newVelocities_;
+  std::array<double, 2> vSeparation(Boid const& b1, Boid const& b2);
+  std::array<double, 2> vAlignment(Boid const& b1, Boid const& b2);
+  std::array<double, 2> vCohesion(Boid const& b1, Boid const& b2);
+  // void reverseV();
 
   int randomizer1(); //*************
   int randomizer2(); //*************
 
- std::array<Boid, 20> flock_; //vergognati fatti schifo cavati gli occhi mozzati le dita
-  Flight();  // max dim fissata momentaneamente a 10
+ std::array<Boid, nBoids_> flock_;
+  Flight();
   void evolve();
   void update();
 };

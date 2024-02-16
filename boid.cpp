@@ -18,7 +18,7 @@ bd::Flight::Flight() {
 std::array<double, 2> bd::Flight::vSeparation(Boid const& b1, Boid const& b2) {
   std::array<double, 2> v{0, 0};
   if (bd::distance(b1, b2) < par_.ds) {
-    v = (-1) * par_.s * (b1.position - b2.position);
+    v = v + ((-1) * par_.s * (b1.position - b2.position));
   }
   return v;
 }
@@ -26,7 +26,7 @@ std::array<double, 2> bd::Flight::vSeparation(Boid const& b1, Boid const& b2) {
 std::array<double, 2> bd::Flight::vAlignment(Boid const& b1, Boid const& b2) {
   std::array<double, 2> v{0, 0};
   if (bd::distance(b1, b2) < par_.d) {
-    v = par_.a * (1 / (nBoids_ - 1)) * (b1.velocity - b2.velocity);
+    v = v + (par_.a * (1 / (nBoids_ - 1)) * (b1.velocity - b2.velocity));
   }
   return v;
 }
@@ -35,22 +35,24 @@ std::array<double, 2> bd::Flight::vCohesion(Boid const& b1, Boid const& b2) {
   std::array<double, 2> v{0, 0};
   if (bd::distance(b1, b2) < par_.d) {
     std::array<double, 2> x = (1 / (nBoids_ - 1)) * b2.position;
-    v = par_.c * (x - b1.position);
+    v = v + (par_.c * (x - b1.position));
   }
   return v;
 }
 
 void bd::Flight::evolve() {
   for (int i{}; i < nBoids_; i++) {
-    for (int j{}; j != i && j < nBoids_; j++) {
-      newVelocities_[i] =
-          flock_[i].velocity + vSeparation(flock_[i], flock_[j]) +
-          vAlignment(flock_[i], flock_[j]) + vCohesion(flock_[i], flock_[j]);
-      newPositions_[i] =
-          flock_[i].position + (.01 * flock_[i].velocity);  // DELTA_T
+    for (int j{}; j < nBoids_; j++) {
+      if (i != j) {
+        newVelocities_[i] =
+            flock_[i].velocity + vSeparation(flock_[i], flock_[j]) +
+            vAlignment(flock_[i], flock_[j]) + vCohesion(flock_[i], flock_[j]);
+        newPositions_[i] =
+            flock_[i].position + (.01 * flock_[i].velocity);  // DELTA_T
+      }
     }
-    bd::Flight::reverseV(flock_[i]);
   }
+  // bd::Flight::reverseV();
 }
 
 void bd::Flight::update() {
@@ -60,12 +62,14 @@ void bd::Flight::update() {
   }
 }
 
-void bd::Flight::reverseV(Boid& b) {  //FAR FUNZIONARE STO COSO PRENDENDO NUMERI DALLA WINDOW
-  if (b.position[0] < 10 || b.position[0] > 790)
-    b.velocity[0] = (-1) * b.velocity[0];
-  if (b.position[1] < 10 || b.position[1] > 790)
-    b.velocity[1] = (-1) * b.velocity[1];
-}
+/* void bd::Flight::reverseV() {
+  for (int i{}; i < nBoids_; i++) {
+    if (flock_[i].position[0] < 10 || flock_[i].position[0] > 790)
+      flock_[i].velocity[0] = (-1) * flock_[i].velocity[0];
+    if (flock_[i].position[1] < 10 || flock_[i].position[1] > 790)
+      flock_[i].velocity[1] = (-1) * flock_[i].velocity[1];
+  }
+} */
 
 int bd::Flight::randomizer1() {
   std::random_device r;
