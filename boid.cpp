@@ -8,8 +8,8 @@ bd::Flight::Flight() {
   for (int i{}; i < nBoids_; i++) {
     flock_[i].position = {static_cast<double>(randomizer1()),
                           static_cast<double>(randomizer1())};
-    flock_[i].velocity = {static_cast<double>(randomizer2()),
-                          static_cast<double>(randomizer2())};
+    flock_[i].velocity = {/* static_cast<double>(randomizer2()),
+                          static_cast<double>(randomizer2()) */ 50, 20};
     newPositions_[i] = {0, 0};
     newVelocities_[i] = {0, 0};
   }
@@ -18,7 +18,7 @@ bd::Flight::Flight() {
 std::array<double, 2> bd::Flight::vSeparation(Boid const& b1, Boid const& b2) {
   std::array<double, 2> v{0, 0};
   if (bd::distance(b1, b2) < par_.ds) {
-    v = v + ((-1) * par_.s * (b1.position - b2.position));
+    v = (-1) * par_.s * (b1.position - b2.position);
   }
   return v;
 }
@@ -26,7 +26,7 @@ std::array<double, 2> bd::Flight::vSeparation(Boid const& b1, Boid const& b2) {
 std::array<double, 2> bd::Flight::vAlignment(Boid const& b1, Boid const& b2) {
   std::array<double, 2> v{0, 0};
   if (bd::distance(b1, b2) < par_.d) {
-    v = v + (par_.a * (1 / (nBoids_ - 1)) * (b1.velocity - b2.velocity));
+    v = par_.a * (1 / (nBoids_ - 1)) * (b1.velocity - b2.velocity);
   }
   return v;
 }
@@ -35,12 +35,13 @@ std::array<double, 2> bd::Flight::vCohesion(Boid const& b1, Boid const& b2) {
   std::array<double, 2> v{0, 0};
   if (bd::distance(b1, b2) < par_.d) {
     std::array<double, 2> x = (1 / (nBoids_ - 1)) * b2.position;
-    v = v + (par_.c * (x - b1.position));
+    v = par_.c * (x - b1.position);
   }
   return v;
 }
 
 void bd::Flight::evolve() {
+  bd::Flight::reverseV();
   for (int i{}; i < nBoids_; i++) {
     for (int j{}; j < nBoids_; j++) {
       if (i != j) {
@@ -48,11 +49,10 @@ void bd::Flight::evolve() {
             flock_[i].velocity + vSeparation(flock_[i], flock_[j]) +
             vAlignment(flock_[i], flock_[j]) + vCohesion(flock_[i], flock_[j]);
         newPositions_[i] =
-            flock_[i].position + (.01 * flock_[i].velocity);  // DELTA_T
+            flock_[i].position + (.001 * flock_[i].velocity);  // DELTA_T
       }
     }
   }
-  // bd::Flight::reverseV();
 }
 
 void bd::Flight::update() {
@@ -62,14 +62,14 @@ void bd::Flight::update() {
   }
 }
 
-/* void bd::Flight::reverseV() {
+void bd::Flight::reverseV() { //da migliorare
   for (int i{}; i < nBoids_; i++) {
     if (flock_[i].position[0] < 10 || flock_[i].position[0] > 790)
       flock_[i].velocity[0] = (-1) * flock_[i].velocity[0];
     if (flock_[i].position[1] < 10 || flock_[i].position[1] > 790)
       flock_[i].velocity[1] = (-1) * flock_[i].velocity[1];
   }
-} */
+}
 
 int bd::Flight::randomizer1() {
   std::random_device r;
@@ -80,6 +80,6 @@ int bd::Flight::randomizer1() {
 
 int bd::Flight::randomizer2() {
   std::random_device eng;
-  std::uniform_int_distribution<int> unif(10, 20);
+  std::uniform_int_distribution<int> unif(0, 10);
   return unif(eng);
 }

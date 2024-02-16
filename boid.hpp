@@ -12,10 +12,10 @@ struct Boid {
 
 struct Parameters {
   double d = 300;  // parametri temporanei fissati
-  double ds = 10;
+  double ds = 50;
   double s = 10;
   double a = .01;
-  double c = .001;  // manca delta_t
+  double c = .01;  // manca delta_t
 };
 
 class Flight {  // inizializzare membri  //class che prima o poi verrà
@@ -28,7 +28,7 @@ class Flight {  // inizializzare membri  //class che prima o poi verrà
   std::array<double, 2> vSeparation(Boid const& b1, Boid const& b2);
   std::array<double, 2> vAlignment(Boid const& b1, Boid const& b2);
   std::array<double, 2> vCohesion(Boid const& b1, Boid const& b2);
-  // void reverseV();
+  void reverseV();
 
   int randomizer1(); //*************
   int randomizer2(); //*************
