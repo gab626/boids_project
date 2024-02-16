@@ -19,3 +19,7 @@ std::array<double, 2> bd::operator*(double c, std::array<double, 2> const& v) {
 double bd::norm(std::array<double, 2> const& v) {
   return std::sqrt(v[0] * v[0] + v[1] * v[1]);
 }
+
+double bd::distance(bd::Boid const& b1, bd::Boid const& b2) {
+  return bd::norm(b1.position - b2.position);
+}
