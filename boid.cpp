@@ -8,8 +8,8 @@ bd::Flight::Flight() {
   for (int i{}; i < nBoids_; i++) {
     flock_[i].position = {static_cast<double>(randomizer1()),
                           static_cast<double>(randomizer1())};
-    flock_[i].velocity = {/* static_cast<double>(randomizer2()),
-                          static_cast<double>(randomizer2()) */ 50, 20};
+    flock_[i].velocity = {static_cast<double>(randomizer2()),
+                          static_cast<double>(randomizer2())};
     newPositions_[i] = {0, 0};
     newVelocities_[i] = {0, 0};
   }
@@ -33,8 +33,9 @@ std::array<double, 2> bd::Flight::vAlignment(Boid const& b1, Boid const& b2) {
 
 std::array<double, 2> bd::Flight::vCohesion(Boid const& b1, Boid const& b2) {
   std::array<double, 2> v{0, 0};
+  std::array<double, 2> x{0, 0};
   if (bd::distance(b1, b2) < par_.d) {
-    std::array<double, 2> x = (1 / (nBoids_ - 1)) * b2.position;
+    x = (1 / (nBoids_ - 1)) * b2.position;
     v = par_.c * (x - b1.position);
   }
   return v;
@@ -48,10 +49,10 @@ void bd::Flight::evolve() {
         newVelocities_[i] =
             flock_[i].velocity + vSeparation(flock_[i], flock_[j]) +
             vAlignment(flock_[i], flock_[j]) + vCohesion(flock_[i], flock_[j]);
-        newPositions_[i] =
-            flock_[i].position + (.001 * flock_[i].velocity);  // DELTA_T
       }
     }
+    newPositions_[i] =
+        flock_[i].position + (.001 * flock_[i].velocity);  // DELTA_T
   }
 }
 
@@ -62,7 +63,7 @@ void bd::Flight::update() {
   }
 }
 
-void bd::Flight::reverseV() { //da migliorare
+void bd::Flight::reverseV() {  // da migliorare
   for (int i{}; i < nBoids_; i++) {
     if (flock_[i].position[0] < 10 || flock_[i].position[0] > 790)
       flock_[i].velocity[0] = (-1) * flock_[i].velocity[0];
@@ -80,6 +81,6 @@ int bd::Flight::randomizer1() {
 
 int bd::Flight::randomizer2() {
   std::random_device eng;
-  std::uniform_int_distribution<int> unif(0, 10);
+  std::uniform_int_distribution<int> unif(-80, 80);
   return unif(eng);
 }
