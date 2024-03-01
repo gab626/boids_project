@@ -15,25 +15,25 @@ bd::Flight::Flight() {
   }
 }
 
-std::array<double, 2> bd::Flight::vSeparation(Boid const& b1, Boid const& b2) {
-  std::array<double, 2> v{0, 0};
+array2 bd::Flight::vSeparation(Boid const& b1, Boid const& b2) {
+  array2 v{0, 0};
   if (bd::distance(b1, b2) < par_.ds) {
     v = (-1) * par_.s * (b1.position - b2.position);
   }
   return v;
 }
 
-std::array<double, 2> bd::Flight::vAlignment(Boid const& b1, Boid const& b2) {
-  std::array<double, 2> v{0, 0};
+array2 bd::Flight::vAlignment(Boid const& b1, Boid const& b2) {
+  array2 v{0, 0};
   if (bd::distance(b1, b2) < par_.d) {
     v = par_.a * (1 / (nBoids_ - 1)) * (b1.velocity - b2.velocity);
   }
   return v;
 }
 
-std::array<double, 2> bd::Flight::vCohesion(Boid const& b1, Boid const& b2) {
-  std::array<double, 2> v{0, 0};
-  std::array<double, 2> x{0, 0};
+array2 bd::Flight::vCohesion(Boid const& b1, Boid const& b2) {
+  array2 v{0, 0};
+  array2 x{0, 0};
   if (bd::distance(b1, b2) < par_.d) {
     x = (1 / (nBoids_ - 1)) * b2.position;
     v = par_.c * (x - b1.position);
