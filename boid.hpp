@@ -13,10 +13,10 @@ struct Boid {
 };
 
 struct Parameters {
-  double d = 300;  // parametri temporanei fissati
-  double ds = 100;
-  double s = 2;
-  double a = .01;
+  double d = 80;  // parametri temporanei fissati
+  double ds = 20;
+  double s = .5;
+  double a = 0;
   double c = .01;  // manca delta_t
 };
 
@@ -29,9 +29,9 @@ class Flight {  // inizializzare membri  //class che prima o poi verrà
   std::array<array2, nBoids_> newPositions_;
   std::array<array2, nBoids_> newVelocities_;
   Flight();
-  array2 vSeparation(Boid const& b1, Boid const& b2);
+  /* array2 vSeparation(Boid const& b1, Boid const& b2);
   array2 vAlignment(Boid const& b1, Boid const& b2);
-  array2 vCohesion(Boid const& b1, Boid const& b2);
+  array2 vCohesion(Boid const& b1, Boid const& b2); */
   void reverseV();
   void evolve();
   void update();

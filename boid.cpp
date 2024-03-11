@@ -1,6 +1,9 @@
 #include "boid.hpp"
 
+#include <functional>
+#include <numeric>
 #include <random>
+#include <vector>
 
 #include "functions.hpp"
 
@@ -15,14 +18,7 @@ bd::Flight::Flight() {
   }
 }
 
-array2 bd::Flight::vSeparation(Boid const& b1, Boid const& b2) {
-  array2 v{0, 0};
-  if (bd::distance(b1, b2) < par_.ds) {
-    v = (-1) * par_.s * (b1.position - b2.position);
-  }
-  return v;
-}
-
+/*
 array2 bd::Flight::vAlignment(Boid const& b1, Boid const& b2) {
   array2 v{0, 0};
   if (bd::distance(b1, b2) < par_.d) {
@@ -53,6 +49,50 @@ void bd::Flight::evolve() {
     }
     newPositions_[i] =
         flock_[i].position + (.001 * flock_[i].velocity);  // DELTA_T
+  }
+} */
+
+void bd::Flight::evolve() {
+  bd::Flight::reverseV();  // inverte velocità per avere boids confinati
+  for (int j{0}; j < nBoids_; j++) {  // trova e salva i boids vicini
+    std::vector<int> nearIndex{};
+    std::vector<int> sepIndex{};
+    for (int i{}; i < nBoids_; i++) {
+      if (i != j) {
+        if (bd::distance(flock_[j], flock_[i]) < par_.d) nearIndex.push_back(i);
+        if (bd::distance(flock_[j], flock_[i]) <
+            par_.ds)  // sostituire flock_ i
+          sepIndex.push_back(i);
+      }
+    }
+    auto sizeSep = sepIndex.size();
+    array2 sum1 = sizeSep * flock_[j].position;
+    for (int i{}; i < sizeSep; i++) sum1 = sum1 - flock_[sepIndex[i]].position;
+    auto v1 = par_.s * sum1;  // separation velocity
+    // ho dovuto invertire il segno di v1, potrei non aver capito qualcosa nella
+    // formula o invertito qualche passaggio/semplificazione
+
+    auto sizeNear = nearIndex.size();
+    array2 v2{0, 0};
+    if (sizeNear >= 1) {
+      array2 sum2 = sizeNear * flock_[j].velocity;
+      for (int i{}; i < sizeNear; i++)
+        sum2 = sum2 - flock_[nearIndex[i]].velocity;
+      v2 = (-1) * par_.a / sizeNear * sum2;  // alignment velocity
+    }
+    // non so se sta funzionando correttamente perché si allineano "troppo" e in
+    // blocco, inoltre anche qui ho dovuto invertire il segno di v2
+
+    array2 v3{0, 0};
+    if (sizeNear >= 1) {
+      array2 center{0, 0};
+    for (int i{}; i < sizeNear; i++) center = center + flock_[nearIndex[i]].position;
+    center = (1 / sizeNear) * center;
+    v3 = (+1) * par_.c * (center - flock_[j].position);
+    }
+
+    newVelocities_[j] = flock_[j].velocity + v1 + v2 + v3;
+    newPositions_[j] = flock_[j].position + (.001 * flock_[j].velocity);
   }
 }
 

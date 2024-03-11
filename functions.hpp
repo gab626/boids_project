@@ -9,10 +9,9 @@ using array2 = std::array<double, 2>;
 
 namespace bd {
 
-array2 operator+(array2 const&,
-                                array2 const&);
-array2 operator-(array2 const&,
-                                array2 const&);
+array2 operator+(array2 const&, array2 const&);
+
+array2 operator-(array2 const&, array2 const&);
 
 array2 operator*(double, array2 const&);
 
