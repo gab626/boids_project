@@ -85,12 +85,14 @@ void bd::Flight::evolve() {
 
     array2 v3{0, 0};
     if (sizeNear >= 1) {
-      array2 center{0, 0};
-    for (int i{}; i < sizeNear; i++) center = center + flock_[nearIndex[i]].position;
-    center = (1 / sizeNear) * center;
-    v3 = (+1) * par_.c * (center - flock_[j].position);
+      array2 center = flock_[j].position;
+      for (int i{}; i < sizeNear; i++)
+        center = center + flock_[nearIndex[i]].position;
+      center = (1 / sizeNear + 1) * center;
+      v3 = (+1) * par_.c * (center - flock_[j].position);  // cohesion velocity
     }
-
+    // sempre indirizzata verso l'origine o il suo punto opposto per motivi
+    // ignoti sconosciuti incompresibili
     newVelocities_[j] = flock_[j].velocity + v1 + v2 + v3;
     newPositions_[j] = flock_[j].position + (.001 * flock_[j].velocity);
   }
@@ -121,6 +123,6 @@ int bd::Flight::randomizer1() {
 
 int bd::Flight::randomizer2() {
   std::random_device eng;
-  std::uniform_int_distribution<int> unif(-80, 80);
+  std::uniform_int_distribution<int> unif(-150, 150);
   return unif(eng);
 }
