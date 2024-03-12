@@ -31,23 +31,23 @@ void bd::Flight::evolve() {
           sepIndex.push_back(i);
       }
     }
-    auto sizeSep = sepIndex.size();
-    array2 sum1 = sizeSep * flock_[j].position;
-    for (int i{}; i < sizeSep; i++) sum1 = sum1 - flock_[sepIndex[i]].position;
-    auto v1 = par_.s * sum1;  // separation velocity
-    // ho dovuto invertire il segno di v1, potrei non aver capito qualcosa nella
-    // formula o invertito qualche passaggio/semplificazione
+    int sizeSep = sepIndex.size();
+    array2 sum1 = -sizeSep * flock_[j].position;
+    for (int i{}; i < sizeSep; i++) sum1 = sum1 + flock_[sepIndex[i]].position;
+    auto v1 = -par_.s * sum1;  // separation velocity
+    // a volte non si vede il respingimento tra boids
+    // vicini, forse è dovuto a velocità troppo grandi
 
-    auto sizeNear = nearIndex.size();
+    int sizeNear = nearIndex.size();
     array2 v2{0, 0};
     if (sizeNear >= 1) {
-      array2 sum2 = sizeNear * flock_[j].velocity;
+      array2 sum2 = -sizeNear * flock_[j].velocity;
       for (int i{}; i < sizeNear; i++)
-        sum2 = sum2 - flock_[nearIndex[i]].velocity;
-      v2 = (-1) * par_.a / sizeNear * sum2;  // alignment velocity
+        sum2 = sum2 + flock_[nearIndex[i]].velocity;
+      v2 = par_.a / sizeNear * sum2;  // alignment velocity
     }
     // non so se sta funzionando correttamente perché si allineano "troppo" e in
-    // blocco, inoltre anche qui ho dovuto invertire il segno di v2
+    // blocco
 
     array2 v3{0, 0};
     if (sizeNear >= 1) {
@@ -77,20 +77,20 @@ void bd::Flight::changePosition() {  // spazio toroidale
     auto y = flock_[i].position[1];
     if (x < 0) flock_[i].position[0] = x + 800;
     if (x > 800) flock_[i].position[0] = x - 800;
-    if (y < 0) flock_[i].position[1] = x + 800;
-    if (y > 800) flock_[i].position[1] = x - 800;
+    if (y < 0) flock_[i].position[1] = y + 800;
+    if (y > 800) flock_[i].position[1] = y - 800;
   }
 }
 
 int bd::Flight::randomizer1() {
   std::random_device r;
   std::default_random_engine eng(r());
-  std::uniform_int_distribution<int> unif(100, 700);
+  std::uniform_int_distribution<int> unif(0, 800);
   return unif(eng);
 }
 
 int bd::Flight::randomizer2() {
   std::random_device eng;
-  std::uniform_int_distribution<int> unif(-150, 150);
+  std::uniform_int_distribution<int> unif(-200, 200);
   return unif(eng);
 }
