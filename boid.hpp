@@ -16,8 +16,8 @@ struct Parameters {
   double d = 50;  // parametri temporanei fissati
   double ds = 20;
   double s = 1;
-  double a = 0.1;
-  double c = 0.01;  // manca delta_t
+  double a = 0;
+  double c = 0.;  // manca delta_t
 };
 
 class Flight {  // inizializzare membri  //class che prima o poi verrà

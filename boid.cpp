@@ -80,7 +80,7 @@ void bd::Flight::changePosition() {  // spazio toroidale
     if (y < 0) flock_[i].position[1] = y + 800;
     if (y > 800) flock_[i].position[1] = y - 800;
   }
-}
+} // forse può essere fatto meglio ma per ora ci va bene
 
 int bd::Flight::randomizer1() {
   std::random_device r;
