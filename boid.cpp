@@ -18,42 +18,8 @@ bd::Flight::Flight() {
   }
 }
 
-/*
-array2 bd::Flight::vAlignment(Boid const& b1, Boid const& b2) {
-  array2 v{0, 0};
-  if (bd::distance(b1, b2) < par_.d) {
-    v = par_.a * (1 / (nBoids_ - 1)) * (b1.velocity - b2.velocity);
-  }
-  return v;
-}
-
-array2 bd::Flight::vCohesion(Boid const& b1, Boid const& b2) {
-  array2 v{0, 0};
-  array2 x{0, 0};
-  if (bd::distance(b1, b2) < par_.d) {
-    x = (1 / (nBoids_ - 1)) * b2.position;
-    v = par_.c * (x - b1.position);
-  }
-  return v;
-}
-
 void bd::Flight::evolve() {
-  bd::Flight::reverseV();
-  for (int i{}; i < nBoids_; i++) {
-    for (int j{}; j < nBoids_; j++) {
-      if (i != j) {
-        newVelocities_[i] =
-            flock_[i].velocity + vSeparation(flock_[i], flock_[j]) +
-            vAlignment(flock_[i], flock_[j]) + vCohesion(flock_[i], flock_[j]);
-      }
-    }
-    newPositions_[i] =
-        flock_[i].position + (.001 * flock_[i].velocity);  // DELTA_T
-  }
-} */
-
-void bd::Flight::evolve() {
-  bd::Flight::reverseV();  // inverte velocità per avere boids confinati
+  bd::Flight::changePosition();
   for (int j{0}; j < nBoids_; j++) {  // trova e salva i boids vicini
     std::vector<int> nearIndex{};
     std::vector<int> sepIndex{};
@@ -85,10 +51,10 @@ void bd::Flight::evolve() {
 
     array2 v3{0, 0};
     if (sizeNear >= 1) {
-      array2 center = flock_[j].position;
+      array2 center = {0, 0};
       for (int i{}; i < sizeNear; i++)
         center = center + flock_[nearIndex[i]].position;
-      center = (1 / sizeNear + 1) * center;
+      center = (1 / sizeNear) * center;
       v3 = (+1) * par_.c * (center - flock_[j].position);  // cohesion velocity
     }
     // sempre indirizzata verso l'origine o il suo punto opposto per motivi
@@ -105,12 +71,14 @@ void bd::Flight::update() {
   }
 }
 
-void bd::Flight::reverseV() {  // da migliorare
+void bd::Flight::changePosition() {  // spazio toroidale
   for (int i{}; i < nBoids_; i++) {
-    if (flock_[i].position[0] < 10 || flock_[i].position[0] > 790)
-      flock_[i].velocity[0] = (-1) * flock_[i].velocity[0];
-    if (flock_[i].position[1] < 10 || flock_[i].position[1] > 790)
-      flock_[i].velocity[1] = (-1) * flock_[i].velocity[1];
+    auto x = flock_[i].position[0];
+    auto y = flock_[i].position[1];
+    if (x < 0) flock_[i].position[0] = x + 800;
+    if (x > 800) flock_[i].position[0] = x - 800;
+    if (y < 0) flock_[i].position[1] = x + 800;
+    if (y > 800) flock_[i].position[1] = x - 800;
   }
 }
 
