@@ -55,7 +55,7 @@ void bd::Flight::evolve() {
       for (int i{}; i < sizeNear; i++)
         center = center + flock_[nearIndex[i]].position;
       center = (1 / sizeNear) * center;
-      v3 = (+1) * par_.c * (center - flock_[j].position);  // cohesion velocity
+      v3 = par_.c * (center - flock_[j].position);  // cohesion velocity
     }
     // sempre indirizzata verso l'origine o il suo punto opposto per motivi
     // ignoti sconosciuti incompresibili
@@ -80,7 +80,7 @@ void bd::Flight::changePosition() {  // spazio toroidale
     if (y < 0) flock_[i].position[1] = y + 800;
     if (y > 800) flock_[i].position[1] = y - 800;
   }
-} // forse può essere fatto meglio ma per ora ci va bene
+}  // forse può essere fatto meglio ma per ora ci va bene
 
 int bd::Flight::randomizer1() {
   std::random_device r;
@@ -94,3 +94,4 @@ int bd::Flight::randomizer2() {
   std::uniform_int_distribution<int> unif(-200, 200);
   return unif(eng);
 }
+// perché i due randomizer hanno implementazione diversa lol

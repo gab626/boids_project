@@ -13,10 +13,10 @@ struct Boid {
 };
 
 struct Parameters {
-  double d = 50;  // parametri temporanei fissati
-  double ds = 20;
-  double s = 1;
-  double a = 0;
+  double d = 150;  // parametri temporanei fissati
+  double ds = 50;
+  double s = .8;
+  double a = 0.;
   double c = 0.;  // manca delta_t
 };
 
