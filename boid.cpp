@@ -32,9 +32,9 @@ void bd::Flight::evolve() {
       }
     }
     int sizeSep = sepIndex.size();
-    array2 sum1 = -sizeSep * flock_[j].position;
-    for (int i{}; i < sizeSep; i++) sum1 = sum1 + flock_[sepIndex[i]].position;
-    auto v1 = -par_.s * sum1;  // separation velocity
+    array2 sum1 = sizeSep * flock_[j].position;
+    for (int i{}; i < sizeSep; i++) sum1 = sum1 - flock_[sepIndex[i]].position;
+    auto v1 = par_.s * sum1;  // separation velocity
     // a volte non si vede il respingimento tra boids
     // vicini, forse è dovuto a velocità troppo grandi
 
@@ -52,7 +52,7 @@ void bd::Flight::evolve() {
     array2 v3{0, 0};
     if (sizeNear >= 1) {
       array2 center = {0, 0};
-      for (int i{}; i < sizeNear; i++)
+      for (int i{}; i < sizeNear; i++) // forse è meglio attivarla per sizeNear >= 2
         center = center + flock_[nearIndex[i]].position;
       center = (1 / sizeNear) * center;
       v3 = par_.c * (center - flock_[j].position);  // cohesion velocity

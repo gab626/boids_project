@@ -15,9 +15,9 @@ struct Boid {
 struct Parameters {
   double d = 150;  // parametri temporanei fissati
   double ds = 50;
-  double s = .8;
+  double s = 0.;
   double a = 0.;
-  double c = 0.;  // manca delta_t
+  double c = .01;  // manca delta_t
 };
 
 class Flight {  // inizializzare membri  //class che prima o poi verrà
