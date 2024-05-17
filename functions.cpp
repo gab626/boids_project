@@ -21,10 +21,10 @@ double bd::distance(bd::Boid const& b1, bd::Boid const& b2) {
   return bd::norm(b1.position - b2.position);
 }
 
-array2 bd::centerMass(std::array<Boid, 5> const& flock) {
+array2 bd::centerMass(std::array<Boid, 20> const& flock) {
   array2 center{0, 0};
-  for (int i{}; i < 5; i++) center = center + flock[i].position;
-  return (1 / 5) * center;
+  for (int i{}; i < 20; i++) center = center + flock[i].position;
+  return (1. / 20.) * center;
 }
 
 void bd::switchPosition(Boid& b) {
@@ -39,7 +39,7 @@ void bd::switchPosition(Boid& b) {
 array2 bd::randomPosition() {
   std::random_device r;
   std::default_random_engine eng(r());
-  std::uniform_int_distribution<int> unif(300, 500);
+  std::uniform_int_distribution<int> unif(0, 800);
   array2 position = {static_cast<double>(unif(eng)),
                      static_cast<double>(unif(eng))};
   return position;
@@ -48,7 +48,7 @@ array2 bd::randomPosition() {
 array2 bd::randomVelocity() {
   std::random_device r;
   std::default_random_engine eng(r());
-  std::uniform_int_distribution<int> unif(0, 0);
+  std::uniform_int_distribution<int> unif(-50, 50);
   array2 velocity = {static_cast<double>(unif(eng)),
                      static_cast<double>(unif(eng))};
   return velocity;
