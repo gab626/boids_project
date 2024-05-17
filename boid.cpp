@@ -40,12 +40,13 @@ void bd::Flight::evolve() {
                                          return p - b->position;
                                        });
 
-    int sizeNear = nearIndex.size();;
-    auto init2 = -sizeNear * flock_[j].velocity;
-    /* auto v2 = par_.a / sizeNear *
+    int sizeNear = nearIndex.size();
+    ;
+    auto init2 = sizeNear * flock_[j].velocity;
+    auto v2 = (par_.a / sizeNear) *
               std::accumulate(
                   nearIndex.begin(), nearIndex.end(), init2,
-                  [](array2 const& p, Boid* b) { return p + b->velocity; }); */
+                  [](array2 const& p, Boid* b) { return p - b->velocity; });
     /* for (int i{}; i < sizeNear; i++)
       sum2 = sum2 + flock_[nearIndex[i]].velocity;
     v2 = par_.a / sizeNear * sum2;  // alignment velocity */
@@ -57,7 +58,7 @@ void bd::Flight::evolve() {
     }
     // sempre indirizzata verso l'origine o il suo punto opposto per motivi
     // ignoti sconosciuti incompresibili
-    newVelocities_[j] = flock_[j].velocity + v1 + v3;
+    newVelocities_[j] = flock_[j].velocity + v1 + v2 + v3;
     newPositions_[j] = flock_[j].position + (.001 * flock_[j].velocity);
   }
 }
