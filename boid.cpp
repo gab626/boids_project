@@ -6,7 +6,7 @@
 
 #include "functions.hpp"
 
-bd::Flight::Flight() { // constructor
+bd::Flight::Flight() {  // constructor
   for (int i{}; i < nBoids_; i++) {
     flock_[i].position = bd::randomPosition();
     flock_[i].velocity = bd::randomVelocity();
@@ -22,43 +22,42 @@ void bd::Flight::toroidalSpace() {  // spazio toroidale
 void bd::Flight::evolve() {
   bd::Flight::toroidalSpace();
   for (int j{0}; j < nBoids_; j++) {  // trova e salva i boids vicini
-    std::vector<int> nearIndex{};
-    std::vector<int> sepIndex{};
+    std::vector<Boid*> nearIndex{};   // da vedere se tornare ad un vector<int>
+    std::vector<Boid*> sepIndex{};
     for (int i{}; i < nBoids_; i++) {
       if (i != j) {
-        if (bd::distance(flock_[j], flock_[i]) < par_.d) nearIndex.push_back(i);
+        if (bd::distance(flock_[j], flock_[i]) < par_.d)
+          nearIndex.push_back(&flock_[i]);
         if (bd::distance(flock_[j], flock_[i]) <
             par_.ds)  // sostituire flock_ i
-          sepIndex.push_back(i);
+          sepIndex.push_back(&flock_[i]);
       }
     }
 
-    int sizeSep = sepIndex.size();
-    array2 sum1 = sizeSep * flock_[j].position;
-    for (int i{}; i < sizeSep; i++) sum1 = sum1 - flock_[sepIndex[i]].position;
-    auto v1 = par_.s * sum1;  // separation velocity
-    // a volte non si vede il respingimento tra boids
-    // vicini, forse è dovuto a velocità troppo grandi
+    auto init1 = sepIndex.size() * flock_[j].position;
+    auto v1 = par_.s * std::accumulate(sepIndex.begin(), sepIndex.end(), init1,
+                                       [](array2 const& p, Boid* b) {
+                                         return p - b->position;
+                                       });
 
-    int sizeNear = nearIndex.size();
-    array2 v2{0, 0};
-    if (sizeNear >= 1) {
-      array2 sum2 = -sizeNear * flock_[j].velocity;
-      for (int i{}; i < sizeNear; i++)
-        sum2 = sum2 + flock_[nearIndex[i]].velocity;
-      v2 = par_.a / sizeNear * sum2;  // alignment velocity
-    }
-    // non so se sta funzionando correttamente perché si allineano "troppo" e in
-    // blocco
+    int sizeNear = nearIndex.size();;
+    auto init2 = -sizeNear * flock_[j].velocity;
+    /* auto v2 = par_.a / sizeNear *
+              std::accumulate(
+                  nearIndex.begin(), nearIndex.end(), init2,
+                  [](array2 const& p, Boid* b) { return p + b->velocity; }); */
+    /* for (int i{}; i < sizeNear; i++)
+      sum2 = sum2 + flock_[nearIndex[i]].velocity;
+    v2 = par_.a / sizeNear * sum2;  // alignment velocity */
 
     array2 v3{0, 0};
     if (sizeNear >= 1) {
       array2 center = centerMass(flock_);
-      v3 = par_.c * (center - flock_[j].position);  // cohesion velocity
+      v3 = par_.c * (center - flock_[j].position);
     }
     // sempre indirizzata verso l'origine o il suo punto opposto per motivi
     // ignoti sconosciuti incompresibili
-    newVelocities_[j] = flock_[j].velocity + v1 + v2 + v3;
+    newVelocities_[j] = flock_[j].velocity + v1 + v3;
     newPositions_[j] = flock_[j].position + (.001 * flock_[j].velocity);
   }
 }

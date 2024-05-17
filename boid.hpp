@@ -13,18 +13,18 @@ struct Boid {
 };
 
 struct Parameters {
-  double d = 300;  // parametri temporanei fissati
-  double ds = 50;
-  double s = 0.;
+  double d = 80;  // parametri temporanei fissati
+  double ds = 30;
+  double s = 2.;
   double a = 0.;
-  double c = .01;  // manca delta_t
+  double c = 0.05;  // manca delta_t
 };
 
 class Flight {  // inizializzare membri  //class che prima o poi verrà
                 // decomposta
  public:  //TUTTO IN PUBLIC PER ORA
   Parameters par_;
-  static const int nBoids_ = 5;  //soluzione temporanea
+  static const int nBoids_ = 20;  //soluzione temporanea
   std::array<Boid, nBoids_> flock_;
   std::array<array2, nBoids_> newPositions_;
   std::array<array2, nBoids_> newVelocities_;
