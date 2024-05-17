@@ -27,6 +27,15 @@ array2 bd::centerMass(std::array<Boid, 5> const& flock) {
   return (1 / 5) * center;
 }
 
+void bd::switchPosition(Boid& b) {
+  auto x = b.position[0];
+  auto y = b.position[1];
+  if (x < 0) b.position[0] = x + 800;
+  if (x > 800) b.position[0] = x - 800;
+  if (y < 0) b.position[1] = y + 800;
+  if (y > 800) b.position[1] = y - 800;
+}
+
 array2 bd::randomPosition() {
   std::random_device r;
   std::default_random_engine eng(r());

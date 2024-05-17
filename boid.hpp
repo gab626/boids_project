@@ -29,7 +29,7 @@ class Flight {  // inizializzare membri  //class che prima o poi verrà
   std::array<array2, nBoids_> newPositions_;
   std::array<array2, nBoids_> newVelocities_;
   Flight();
-  void changePosition();
+  void toroidalSpace();
   void evolve();
   void update();
 };

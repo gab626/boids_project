@@ -6,7 +6,7 @@
 
 #include "functions.hpp"
 
-bd::Flight::Flight() {
+bd::Flight::Flight() { // constructor
   for (int i{}; i < nBoids_; i++) {
     flock_[i].position = bd::randomPosition();
     flock_[i].velocity = bd::randomVelocity();
@@ -15,8 +15,12 @@ bd::Flight::Flight() {
   }
 }
 
+void bd::Flight::toroidalSpace() {  // spazio toroidale
+  for (int i{}; i < nBoids_; i++) bd::switchPosition(flock_[i]);
+}
+
 void bd::Flight::evolve() {
-  bd::Flight::changePosition();
+  bd::Flight::toroidalSpace();
   for (int j{0}; j < nBoids_; j++) {  // trova e salva i boids vicini
     std::vector<int> nearIndex{};
     std::vector<int> sepIndex{};
@@ -65,14 +69,3 @@ void bd::Flight::update() {
     flock_[i].velocity = newVelocities_[i];
   }
 }
-
-void bd::Flight::changePosition() {  // spazio toroidale
-  for (int i{}; i < nBoids_; i++) {
-    auto x = flock_[i].position[0];
-    auto y = flock_[i].position[1];
-    if (x < 0) flock_[i].position[0] = x + 800;
-    if (x > 800) flock_[i].position[0] = x - 800;
-    if (y < 0) flock_[i].position[1] = y + 800;
-    if (y > 800) flock_[i].position[1] = y - 800;
-  }
-}  // forse può essere fatto meglio ma per ora ci va bene
