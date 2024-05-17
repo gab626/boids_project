@@ -19,6 +19,12 @@ double norm(array2 const&);
 
 double distance(Boid const&, Boid const&);
 
+array2 centerMass(std::array<Boid, 5> const&);
+
+array2 randomPosition();
+
+array2 randomVelocity();
+
 }  // namespace bd
 
 #endif
