@@ -13,7 +13,7 @@ struct Boid {
 };
 
 struct Parameters {
-  double d = 150;  // parametri temporanei fissati
+  double d = 300;  // parametri temporanei fissati
   double ds = 50;
   double s = 0.;
   double a = 0.;
@@ -24,7 +24,7 @@ class Flight {  // inizializzare membri  //class che prima o poi verrà
                 // decomposta
  public:  //TUTTO IN PUBLIC PER ORA
   Parameters par_;
-  static const int nBoids_ = 20;  //soluzione temporanea
+  static const int nBoids_ = 5;  //soluzione temporanea
   std::array<Boid, nBoids_> flock_;
   std::array<array2, nBoids_> newPositions_;
   std::array<array2, nBoids_> newVelocities_;
@@ -32,8 +32,6 @@ class Flight {  // inizializzare membri  //class che prima o poi verrà
   void changePosition();
   void evolve();
   void update();
-  int randomizer1(); //*************
-  int randomizer2(); //*************
 };
 
 }  // namespace bd
