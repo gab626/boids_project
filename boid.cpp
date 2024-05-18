@@ -41,7 +41,6 @@ void bd::Flight::evolve() {
                                        });
 
     int sizeNear = nearIndex.size();
-    ;
     auto init2 = sizeNear * flock_[j].velocity;
     auto v2 = (par_.a / sizeNear) *
               std::accumulate(
@@ -53,12 +52,11 @@ void bd::Flight::evolve() {
 
     array2 v3{0, 0};
     if (sizeNear >= 1) {
-      array2 center = centerMass(flock_);
+      array2 center = bd::centerMass(nearIndex);
       v3 = par_.c * (center - flock_[j].position);
     }
-    // sempre indirizzata verso l'origine o il suo punto opposto per motivi
-    // ignoti sconosciuti incompresibili
-    newVelocities_[j] = flock_[j].velocity + v1 + v2 + v3;
+    
+    newVelocities_[j] = flock_[j].velocity + v1 + v3;
     newPositions_[j] = flock_[j].position + (.001 * flock_[j].velocity);
   }
 }
@@ -67,5 +65,6 @@ void bd::Flight::update() {
   for (int i{}; i < nBoids_; i++) {
     flock_[i].position = newPositions_[i];
     flock_[i].velocity = newVelocities_[i];
+    // bd::speedLimit(flock_[i]);
   }
 }

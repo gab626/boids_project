@@ -2,6 +2,7 @@
 #define FUNCTION_HPP
 
 #include <array>
+#include <vector>
 
 #include "boid.hpp"
 
@@ -19,9 +20,11 @@ double norm(array2 const&);
 
 double distance(Boid const&, Boid const&);
 
-array2 centerMass(std::array<Boid, 20> const&);
+array2 centerMass(std::vector<Boid*>);
 
 void switchPosition(Boid&);
+
+// void speedLimit(Boid&);
 
 array2 randomPosition();
 
