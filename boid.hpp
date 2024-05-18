@@ -10,15 +10,15 @@ namespace bd {
 struct Boid {
   array2 position{0, 0};
   array2 velocity{0, 0};
-  // double maxSpeed = 300.;
+  double maxSpeed = 2000.;
 };
 
 struct Parameters {
-  double d = 50;  // parametri temporanei fissati
-  double ds = 20;
-  double s = 2.;
-  double a = 0.;
-  double c = 0.1;  // manca delta_t
+  double d = 100;  // parametri temporanei fissati
+  double ds = 50;
+  double s = 0.5;
+  double a = 0.01;
+  double c = 0.05;
 };
 
 class Flight {  // inizializzare membri  //class che prima o poi verrà

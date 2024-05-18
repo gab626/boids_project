@@ -41,22 +41,17 @@ void bd::Flight::evolve() {
                                        });
 
     int sizeNear = nearIndex.size();
-    auto init2 = sizeNear * flock_[j].velocity;
-    auto v2 = (par_.a / sizeNear) *
-              std::accumulate(
-                  nearIndex.begin(), nearIndex.end(), init2,
-                  [](array2 const& p, Boid* b) { return p - b->velocity; });
-    /* for (int i{}; i < sizeNear; i++)
-      sum2 = sum2 + flock_[nearIndex[i]].velocity;
-    v2 = par_.a / sizeNear * sum2;  // alignment velocity */
+    array2 v2{};
+    array2 v3{};
+    if (sizeNear >= 1) {  // possiamo spostare questa condizione altrove?
+      array2 meanVelocity = bd::meanVelocity(nearIndex);
+      v2 = par_.a * (meanVelocity - flock_[j].velocity);
 
-    array2 v3{0, 0};
-    if (sizeNear >= 1) {
-      array2 center = bd::centerMass(nearIndex);
-      v3 = par_.c * (center - flock_[j].position);
+      array2 centerMass = bd::centerMass(nearIndex);
+      v3 = par_.c * (centerMass - flock_[j].position);
     }
-    
-    newVelocities_[j] = flock_[j].velocity + v1 + v3;
+
+    newVelocities_[j] = flock_[j].velocity + v1 + v2 + v3;
     newPositions_[j] = flock_[j].position + (.001 * flock_[j].velocity);
   }
 }
@@ -65,6 +60,6 @@ void bd::Flight::update() {
   for (int i{}; i < nBoids_; i++) {
     flock_[i].position = newPositions_[i];
     flock_[i].velocity = newVelocities_[i];
-    // bd::speedLimit(flock_[i]);
+    bd::speedLimit(flock_[i]);
   }
 }

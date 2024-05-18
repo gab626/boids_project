@@ -20,11 +20,13 @@ double norm(array2 const&);
 
 double distance(Boid const&, Boid const&);
 
+array2 meanVelocity(std::vector<Boid*>);
+
 array2 centerMass(std::vector<Boid*>);
 
 void switchPosition(Boid&);
 
-// void speedLimit(Boid&);
+void speedLimit(Boid&);
 
 array2 randomPosition();
 
