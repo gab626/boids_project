@@ -22,23 +22,23 @@ double bd::distance(bd::Boid const& b1, bd::Boid const& b2) {
   return bd::norm(b1.position - b2.position);
 }
 
-array2 bd::meanVelocity(std::vector<Boid*> const& near) {
+array2 bd::meanVelocity(std::vector<bd::Boid*> const& near) {
   array2 init{};
   array2 mean =
       std::accumulate(near.begin(), near.end(), init,
-                      [](array2 const& p, Boid* b) { return p + b->velocity; });
+                      [](array2 const& p, bd::Boid* b) { return p + b->velocity; });
   return (1. / near.size()) * mean;
 }
 
-array2 bd::centerMass(std::vector<Boid*> const& near) {
+array2 bd::centerMass(std::vector<bd::Boid*> const& near) {
   array2 init{};
   array2 center =
       std::accumulate(near.begin(), near.end(), init,
-                      [](array2 const& p, Boid* b) { return p + b->position; });
+                      [](array2 const& p, bd::Boid* b) { return p + b->position; });
   return (1. / near.size()) * center;
 }
 
-void bd::toroidalSpace(Boid& b) {
+void bd::toroidalSpace(bd::Boid& b) {
   auto x = b.position[0];
   auto y = b.position[1];
   if (x < 0) b.position[0] = x + 800;
@@ -47,7 +47,7 @@ void bd::toroidalSpace(Boid& b) {
   if (y > 800) b.position[1] = y - 800;
 }
 
-void bd::speedLimit(Boid& b) {
+void bd::speedLimit(bd::Boid& b) {
   double actualSpeed = bd::norm(b.velocity);
   if (actualSpeed > b.maxSpeed) {
     double red = b.maxSpeed / actualSpeed;

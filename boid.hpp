@@ -26,8 +26,8 @@ class Flight {
   Parameters par_;
   static const int nBoids_ = 20;  // soluzione temporanea
   std::array<Boid, nBoids_> flock_;
-  std::array<array2, nBoids_> newPositions_;
-  std::array<array2, nBoids_> newVelocities_;
+  std::array<array2, nBoids_> newPositions_{};
+  std::array<array2, nBoids_> newVelocities_{};
   Flight();
   void evolve();
   void update();

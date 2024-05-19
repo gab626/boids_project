@@ -10,8 +10,6 @@ bd::Flight::Flight() {  // constructor
   for (int i{}; i < nBoids_; i++) {
     flock_[i].position = bd::randomPosition();
     flock_[i].velocity = bd::randomVelocity();
-    newPositions_[i] = {0, 0};
-    newVelocities_[i] = {0, 0};
   }
 }
 
