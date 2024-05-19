@@ -17,13 +17,13 @@ class Boid {
   public:
   Boid();
   ~Boid();
-  array2 getPos() const;
-  array2 getVel() const;
-  double getMaxSpeed() const;
-  void setPos(array2 const&);
-  void setVel(array2 const&);
-  void setPosX(double);
-  void setPosY(double);
+  array2 get_Pos() const;
+  array2 get_Vel() const;
+  double get_MaxSpeed() const;
+  void set_Pos(array2 const&);
+  void set_Vel(array2 const&);
+  void set_PosX(double);
+  void set_PosY(double);
 };
 
 

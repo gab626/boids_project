@@ -11,19 +11,19 @@ bd::Boid::Boid()
 
 bd::Boid::~Boid() {}
 
-array2 bd::Boid::getPos() const { return position_; }
+array2 bd::Boid::get_Pos() const { return position_; }
 
-array2 bd::Boid::getVel() const { return velocity_; }
+array2 bd::Boid::get_Vel() const { return velocity_; }
 
-double bd::Boid::getMaxSpeed() const { return maxSpeed_; }
+double bd::Boid::get_MaxSpeed() const { return maxSpeed_; }
 
-void bd::Boid::setPos(array2 const& a) { position_ = a; }
+void bd::Boid::set_Pos(array2 const& a) { position_ = a; }
 
-void bd::Boid::setVel(array2 const& b) { velocity_ = b; }
+void bd::Boid::set_Vel(array2 const& b) { velocity_ = b; }
 
-void bd::Boid::setPosX(double x) { position_[0] = x; }
+void bd::Boid::set_PosX(double x) { position_[0] = x; }
 
-void bd::Boid::setPosY(double y) { position_[1] = y; }
+void bd::Boid::set_PosY(double y) { position_[1] = y; }
 
 bd::Flight::Flight() {
   for (int i{}; i < par_.N; i++) {
@@ -48,10 +48,10 @@ void bd::Flight::evolve() {
       }
     }
 
-    auto init1 = sepIndex.size() * flock_[j].getPos();
+    auto init1 = sepIndex.size() * flock_[j].get_Pos();
     auto v1 = par_.s * std::accumulate(sepIndex.begin(), sepIndex.end(), init1,
                                        [](array2 const& p, Boid* b) {
-                                         return p - b->getPos();
+                                         return p - b->get_Pos();
                                        });
 
     int sizeNear = nearIndex.size();
@@ -59,21 +59,21 @@ void bd::Flight::evolve() {
     array2 v3{};
     if (sizeNear >= 1) {  // possiamo spostare questa condizione altrove?
       array2 meanVelocity = bd::meanVelocity(nearIndex);
-      v2 = par_.a * (meanVelocity - flock_[j].getVel());
+      v2 = par_.a * (meanVelocity - flock_[j].get_Vel());
 
       array2 centerMass = bd::centerMass(nearIndex);
-      v3 = par_.c * (centerMass - flock_[j].getPos());
+      v3 = par_.c * (centerMass - flock_[j].get_Pos());
     }
 
-    newVelocities_[j] = flock_[j].getVel() + v1 + v2 + v3;
-    newPositions_[j] = flock_[j].getPos() + (.001 * flock_[j].getVel());
+    newVelocities_[j] = flock_[j].get_Vel() + v1 + v2 + v3;
+    newPositions_[j] = flock_[j].get_Pos() + (.001 * flock_[j].get_Vel());
   }
 }
 
 void bd::Flight::update() {
   for (int i{}; i < par_.N; i++) {
-    flock_[i].setPos(newPositions_[i]);
-    flock_[i].setVel(newVelocities_[i]);
+    flock_[i].set_Pos(newPositions_[i]);
+    flock_[i].set_Vel(newVelocities_[i]);
     bd::speedLimit(flock_[i]);
     bd::toroidalSpace(flock_[i]);
   }
