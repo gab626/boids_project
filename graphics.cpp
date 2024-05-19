@@ -1,7 +1,7 @@
 #include "graphics.hpp"
 
-sf::Vector2<float> boidToShape(bd::Boid const& b) {
-  sf::Vector2<float> v = {static_cast<float>(b.position[0]),
-                          static_cast<float>(b.position[1])};
+sf::Vector2<float> bd::boidToShape(bd::Boid& b) {
+  sf::Vector2<float> v = {static_cast<float>(b.getPos()[0]),
+                          static_cast<float>(b.getPos()[1])};
   return v;
 }
