@@ -34,10 +34,14 @@ bd::Flight::Flight() {
   }
 }
 
+int bd::Flight::get_N() const { return par_.N; }
+
+std::vector<bd::Boid> bd::Flight::get_flock() const { return flock_; }
+
 void bd::Flight::evolve() {
   for (int j{0}; j < par_.N; j++) {  // trova e salva i boids vicini
-    std::vector<Boid*> nearIndex{};   // da vedere se tornare ad un vector<int>
-    std::vector<Boid*> sepIndex{};
+    std::vector<bd::Boid*> nearIndex{};
+    std::vector<bd::Boid*> sepIndex{};
     for (int i{}; i < par_.N; i++) {
       if (i != j) {
         if (bd::distance(flock_[j], flock_[i]) < par_.d)
@@ -50,7 +54,7 @@ void bd::Flight::evolve() {
 
     auto init1 = sepIndex.size() * flock_[j].get_Pos();
     auto v1 = par_.s * std::accumulate(sepIndex.begin(), sepIndex.end(), init1,
-                                       [](array2 const& p, Boid* b) {
+                                       [](array2 const& p, bd::Boid* b) {
                                          return p - b->get_Pos();
                                        });
 

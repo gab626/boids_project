@@ -9,12 +9,12 @@ using array2 = std::array<double, 2>;
 namespace bd {
 
 class Boid {
-  private:
+ private:
   array2 position_{0, 0};
   array2 velocity_{0, 0};
   double maxSpeed_ = 2000.;
 
-  public:
+ public:
   Boid();
   ~Boid();
   array2 get_Pos() const;
@@ -26,7 +26,6 @@ class Boid {
   void set_PosY(double);
 };
 
-
 struct Parameters {
   double d = 100;  // parametri temporanei fissati
   double ds = 50;
@@ -37,12 +36,16 @@ struct Parameters {
 };
 
 class Flight {
- public:  // TUTTO IN PUBLIC PER ORA
+ private:
   Parameters par_;
   std::vector<Boid> flock_;
   std::vector<array2> newPositions_;
   std::vector<array2> newVelocities_;
+
+ public:
   Flight();
+  int get_N() const;
+  std::vector<Boid> get_flock() const; // non mi piace
   void evolve();
   void update();
 };
