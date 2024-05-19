@@ -39,10 +39,9 @@ struct Parameters {
 class Flight {
  public:  // TUTTO IN PUBLIC PER ORA
   Parameters par_;
-  static const int nBoids_ = 20;  // soluzione temporanea
   std::vector<Boid> flock_;
-  std::array<array2, nBoids_> newPositions_{};
-  std::array<array2, nBoids_> newVelocities_{};
+  std::vector<array2> newPositions_;
+  std::vector<array2> newVelocities_;
   Flight();
   void evolve();
   void update();
