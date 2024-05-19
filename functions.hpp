@@ -20,9 +20,9 @@ double norm(array2 const&);
 
 double distance(Boid const&, Boid const&);
 
-array2 meanVelocity(std::vector<Boid*>);
+array2 meanVelocity(std::vector<Boid*> const&);
 
-array2 centerMass(std::vector<Boid*>);
+array2 centerMass(std::vector<Boid*> const&);
 
 void switchPosition(Boid&);
 

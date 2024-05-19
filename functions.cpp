@@ -22,7 +22,7 @@ double bd::distance(bd::Boid const& b1, bd::Boid const& b2) {
   return bd::norm(b1.position - b2.position);
 }
 
-array2 bd::meanVelocity(std::vector<Boid*> near) {
+array2 bd::meanVelocity(std::vector<Boid*> const& near) {
   array2 init{};
   array2 mean =
       std::accumulate(near.begin(), near.end(), init,
@@ -30,7 +30,7 @@ array2 bd::meanVelocity(std::vector<Boid*> near) {
   return (1. / near.size()) * mean;
 }
 
-array2 bd::centerMass(std::vector<Boid*> near) {
+array2 bd::centerMass(std::vector<Boid*> const& near) {
   array2 init{};
   array2 center =
       std::accumulate(near.begin(), near.end(), init,
@@ -67,7 +67,7 @@ array2 bd::randomPosition() {
 array2 bd::randomVelocity() {
   std::random_device r;
   std::default_random_engine eng(r());
-  std::uniform_int_distribution<int> unif(-100, 100);
+  std::uniform_int_distribution<int> unif(-200, 200);
   array2 velocity = {static_cast<double>(unif(eng)),
                      static_cast<double>(unif(eng))};
   return velocity;
