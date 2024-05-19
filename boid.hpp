@@ -21,16 +21,14 @@ struct Parameters {
   double c = 0.05;
 };
 
-class Flight {  // inizializzare membri  //class che prima o poi verrà
-                // decomposta
- public:  //TUTTO IN PUBLIC PER ORA
+class Flight {
+ public:  // TUTTO IN PUBLIC PER ORA
   Parameters par_;
-  static const int nBoids_ = 20;  //soluzione temporanea
+  static const int nBoids_ = 20;  // soluzione temporanea
   std::array<Boid, nBoids_> flock_;
   std::array<array2, nBoids_> newPositions_;
   std::array<array2, nBoids_> newVelocities_;
   Flight();
-  void toroidalSpace();
   void evolve();
   void update();
 };

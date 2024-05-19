@@ -38,7 +38,7 @@ array2 bd::centerMass(std::vector<Boid*> const& near) {
   return (1. / near.size()) * center;
 }
 
-void bd::switchPosition(Boid& b) {
+void bd::toroidalSpace(Boid& b) {
   auto x = b.position[0];
   auto y = b.position[1];
   if (x < 0) b.position[0] = x + 800;

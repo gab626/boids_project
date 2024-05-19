@@ -24,7 +24,7 @@ array2 meanVelocity(std::vector<Boid*> const&);
 
 array2 centerMass(std::vector<Boid*> const&);
 
-void switchPosition(Boid&);
+void toroidalSpace(Boid&);
 
 void speedLimit(Boid&);
 

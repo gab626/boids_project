@@ -15,10 +15,6 @@ bd::Flight::Flight() {  // constructor
   }
 }
 
-void bd::Flight::toroidalSpace() {  // spazio toroidale
-  for (int i{}; i < nBoids_; i++) bd::switchPosition(flock_[i]);
-}
-
 void bd::Flight::evolve() {
   for (int j{0}; j < nBoids_; j++) {  // trova e salva i boids vicini
     std::vector<Boid*> nearIndex{};   // da vedere se tornare ad un vector<int>
@@ -60,6 +56,6 @@ void bd::Flight::update() {
     flock_[i].position = newPositions_[i];
     flock_[i].velocity = newVelocities_[i];
     bd::speedLimit(flock_[i]);
-      bd::Flight::toroidalSpace();
+    bd::toroidalSpace(flock_[i]);
   }
 }
