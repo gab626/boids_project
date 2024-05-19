@@ -17,9 +17,9 @@ class Boid {
   public:
   Boid();
   ~Boid();
-  array2 getPos();
-  array2 getVel();
-  double getMaxSpeed();
+  array2 getPos() const;
+  array2 getVel() const;
+  double getMaxSpeed() const;
   void setPos(array2 const&);
   void setVel(array2 const&);
   void setPosX(double);

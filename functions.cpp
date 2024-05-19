@@ -18,7 +18,7 @@ double bd::norm(array2 const& v) {
   return std::sqrt(v[0] * v[0] + v[1] * v[1]);
 }
 
-double bd::distance(bd::Boid& b1, bd::Boid& b2) {
+double bd::distance(bd::Boid const& b1, bd::Boid const& b2) {
   return bd::norm(b1.getPos() - b2.getPos());
 }
 
@@ -26,7 +26,7 @@ array2 bd::meanVelocity(std::vector<bd::Boid*> const& near) {
   array2 init{};
   array2 mean = std::accumulate(
       near.begin(), near.end(), init,
-      [](array2 const& p, bd::Boid* b) { return p + b->getVel(); });
+      [](array2 const& p, bd::Boid* const& b) { return p + b->getVel(); });
   return (1. / near.size()) * mean;
 }
 
@@ -34,7 +34,7 @@ array2 bd::centerMass(std::vector<bd::Boid*> const& near) {
   array2 init{};
   array2 center = std::accumulate(
       near.begin(), near.end(), init,
-      [](array2 const& p, bd::Boid* b) { return p + b->getPos(); });
+      [](array2 const& p, bd::Boid* const& b) { return p + b->getPos(); });
   return (1. / near.size()) * center;
 }
 

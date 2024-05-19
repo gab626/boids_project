@@ -11,11 +11,11 @@ bd::Boid::Boid()
 
 bd::Boid::~Boid() {}
 
-array2 bd::Boid::getPos() { return position_; }
+array2 bd::Boid::getPos() const { return position_; }
 
-array2 bd::Boid::getVel() { return velocity_; }
+array2 bd::Boid::getVel() const { return velocity_; }
 
-double bd::Boid::getMaxSpeed() { return maxSpeed_; }
+double bd::Boid::getMaxSpeed() const { return maxSpeed_; }
 
 void bd::Boid::setPos(array2 const& a) { position_ = a; }
 
@@ -26,7 +26,7 @@ void bd::Boid::setPosX(double x) { position_[0] = x; }
 void bd::Boid::setPosY(double y) { position_[1] = y; }
 
 bd::Flight::Flight() {
-  for (int i{}; i < nBoids_; i++) {
+  for (int i{}; i < par_.N; i++) {
     bd::Boid b;
     flock_.push_back(b);
   }
