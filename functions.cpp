@@ -18,40 +18,40 @@ double bd::norm(array2 const& v) {
   return std::sqrt(v[0] * v[0] + v[1] * v[1]);
 }
 
-double bd::distance(bd::Boid const& b1, bd::Boid const& b2) {
-  return bd::norm(b1.position - b2.position);
+double bd::distance(bd::Boid& b1, bd::Boid& b2) {
+  return bd::norm(b1.getPos() - b2.getPos());
 }
 
 array2 bd::meanVelocity(std::vector<bd::Boid*> const& near) {
   array2 init{};
-  array2 mean =
-      std::accumulate(near.begin(), near.end(), init,
-                      [](array2 const& p, bd::Boid* b) { return p + b->velocity; });
+  array2 mean = std::accumulate(
+      near.begin(), near.end(), init,
+      [](array2 const& p, bd::Boid* b) { return p + b->getVel(); });
   return (1. / near.size()) * mean;
 }
 
 array2 bd::centerMass(std::vector<bd::Boid*> const& near) {
   array2 init{};
-  array2 center =
-      std::accumulate(near.begin(), near.end(), init,
-                      [](array2 const& p, bd::Boid* b) { return p + b->position; });
+  array2 center = std::accumulate(
+      near.begin(), near.end(), init,
+      [](array2 const& p, bd::Boid* b) { return p + b->getPos(); });
   return (1. / near.size()) * center;
 }
 
 void bd::toroidalSpace(bd::Boid& b) {
-  auto x = b.position[0];
-  auto y = b.position[1];
-  if (x < 0) b.position[0] = x + 800;
-  if (x > 800) b.position[0] = x - 800;
-  if (y < 0) b.position[1] = y + 800;
-  if (y > 800) b.position[1] = y - 800;
+  auto x = b.getPos()[0];
+  auto y = b.getPos()[1];
+  if (x < 0) b.setPosX(x + 800);
+  if (x > 800) b.setPosX(x - 800);
+  if (y < 0) b.setPosY(y + 800);
+  if (y > 800) b.setPosY(y - 800);
 }
 
 void bd::speedLimit(bd::Boid& b) {
-  double actualSpeed = bd::norm(b.velocity);
-  if (actualSpeed > b.maxSpeed) {
-    double red = b.maxSpeed / actualSpeed;
-    b.velocity = red * b.velocity;
+  double actualSpeed = bd::norm(b.getVel());
+  if (actualSpeed > b.getMaxSpeed()) {
+    double red = b.getMaxSpeed() / actualSpeed;
+    b.setVel(red * b.getVel());
   }
 }
 

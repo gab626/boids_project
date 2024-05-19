@@ -18,7 +18,7 @@ array2 operator*(double, array2 const&);
 
 double norm(array2 const&);
 
-double distance(Boid const&, Boid const&);
+double distance(Boid&, Boid&);
 
 array2 meanVelocity(std::vector<Boid*> const&);
 
