@@ -18,6 +18,8 @@ class Boid {
   ~Boid();
   array2 get_Pos() const;
   array2 get_Vel() const;
+  float get_Pos_X() const;
+  float get_Pos_Y() const;
   void set_Pos(array2 const&);
   void set_Vel(array2 const&);
   void set_PosX(float);
@@ -45,7 +47,7 @@ class Flight {
   Flight();
   ~Flight();
   int get_N() const;
-  std::vector<Boid> get_flock() const; // non mi piace
+  std::vector<Boid> get_flock() const;  // non mi piace
   void evolve();
   void update();
 };

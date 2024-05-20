@@ -15,6 +15,10 @@ array2 bd::Boid::get_Pos() const { return position_; }
 
 array2 bd::Boid::get_Vel() const { return velocity_; }
 
+float bd::Boid::get_Pos_X() const { return position_[0]; }
+
+float bd::Boid::get_Pos_Y() const { return position_[1]; }
+
 void bd::Boid::set_Pos(array2 const& a) { position_ = a; }
 
 void bd::Boid::set_Vel(array2 const& b) { velocity_ = b; }
@@ -74,7 +78,7 @@ void bd::Flight::evolve() {
   }
 }
 
-void bd::Flight::update() { // CERCARE ALGORITMO
+void bd::Flight::update() {  // CERCARE ALGORITMO
   for (int i{}; i < par_.N; i++) {
     flock_[i].set_Pos(newPositions_[i]);
     flock_[i].set_Vel(newVelocities_[i]);
