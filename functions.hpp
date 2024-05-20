@@ -6,19 +6,17 @@
 
 #include "boid.hpp"
 
-using array2 = std::array<double, 2>;
-
 namespace bd {
 
 array2 operator+(array2 const&, array2 const&);
 
 array2 operator-(array2 const&, array2 const&);
 
-array2 operator*(double, array2 const&);
+array2 operator*(float, array2 const&);
 
-double norm(array2 const&);
+float norm(array2 const&);
 
-double distance(Boid const&, Boid const&);
+float distance(Boid const&, Boid const&);
 
 array2 meanVelocity(std::vector<Boid*> const&);
 
@@ -26,7 +24,7 @@ array2 centerMass(std::vector<Boid*> const&);
 
 void toroidalSpace(Boid&);
 
-void speedLimit(Boid&);
+void speedLimit(Boid&, float);
 
 array2 randomPosition();
 

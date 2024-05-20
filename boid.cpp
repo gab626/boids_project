@@ -15,15 +15,13 @@ array2 bd::Boid::get_Pos() const { return position_; }
 
 array2 bd::Boid::get_Vel() const { return velocity_; }
 
-double bd::Boid::get_MaxSpeed() const { return maxSpeed_; }
-
 void bd::Boid::set_Pos(array2 const& a) { position_ = a; }
 
 void bd::Boid::set_Vel(array2 const& b) { velocity_ = b; }
 
-void bd::Boid::set_PosX(double x) { position_[0] = x; }
+void bd::Boid::set_PosX(float x) { position_[0] = x; }
 
-void bd::Boid::set_PosY(double y) { position_[1] = y; }
+void bd::Boid::set_PosY(float y) { position_[1] = y; }
 
 bd::Flight::Flight() {
   for (int i{}; i < par_.N; i++) {
@@ -33,6 +31,8 @@ bd::Flight::Flight() {
     newVelocities_.push_back({});
   }
 }
+
+bd::Flight::~Flight() {}
 
 int bd::Flight::get_N() const { return par_.N; }
 
@@ -74,11 +74,11 @@ void bd::Flight::evolve() {
   }
 }
 
-void bd::Flight::update() {
+void bd::Flight::update() { // CERCARE ALGORITMO
   for (int i{}; i < par_.N; i++) {
     flock_[i].set_Pos(newPositions_[i]);
     flock_[i].set_Vel(newVelocities_[i]);
-    bd::speedLimit(flock_[i]);
+    bd::speedLimit(flock_[i], par_.maxSpeed);
     bd::toroidalSpace(flock_[i]);
   }
 }
