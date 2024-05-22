@@ -4,7 +4,6 @@
 #include <SFML/Graphics.hpp>
 
 #include "boid.hpp"
-#include "functions.hpp"
 
 namespace bd {
 
