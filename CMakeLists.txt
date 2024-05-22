@@ -10,7 +10,7 @@ FetchContent_Declare(SFML
     GIT_TAG 2.6.x)
 FetchContent_MakeAvailable(SFML)
 
-add_executable(BoidsProject prova.cpp functions.cpp boid.cpp graphics.cpp)
+add_executable(BoidsProject prova.cpp functions.cpp boid.cpp flight.cpp graphics.cpp)
 target_link_libraries(BoidsProject PRIVATE sfml-graphics)
 target_compile_features(BoidsProject PRIVATE cxx_std_17)
 
