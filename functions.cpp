@@ -14,26 +14,22 @@ array2 bd::operator-(array2 const& v1, array2 const& v2) {
 
 array2 bd::operator*(float c, array2 const& v) { return {c * v[0], c * v[1]}; }
 
-float bd::norm(array2 const& v) {
-  return std::sqrt(v[0] * v[0] + v[1] * v[1]);
-}
+float bd::norm(array2 const& v) { return std::sqrt(v[0] * v[0] + v[1] * v[1]); }
 
 float bd::distance(bd::Boid const& b1, bd::Boid const& b2) {
   return bd::norm(b1.get_Pos() - b2.get_Pos());
 }
 
 array2 bd::meanVelocity(std::vector<bd::Boid*> const& near) {
-  array2 init{};
   array2 mean = std::accumulate(
-      near.begin(), near.end(), init,
+      near.begin(), near.end(), array2{},
       [](array2 const& p, bd::Boid* const& b) { return p + b->get_Vel(); });
   return (1. / near.size()) * mean;
 }
 
 array2 bd::centerMass(std::vector<bd::Boid*> const& near) {
-  array2 init{};
   array2 center = std::accumulate(
-      near.begin(), near.end(), init,
+      near.begin(), near.end(), array2{},
       [](array2 const& p, bd::Boid* const& b) { return p + b->get_Pos(); });
   return (1. / near.size()) * center;
 }
@@ -55,7 +51,7 @@ void bd::speedLimit(bd::Boid& b, float ms) {
   }
 }
 
-array2 bd::randomPosition() {
+array2 bd::randomPosition() {  // provare algoritmi
   std::random_device r;
   std::default_random_engine eng(r());
   std::uniform_real_distribution<float> unif(0, 800);
