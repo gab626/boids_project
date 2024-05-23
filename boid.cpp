@@ -2,6 +2,8 @@
 
 #include "functions.hpp"
 
+bd::Boid::Boid() : position_{0., 0.}, velocity_{0., 0.} {}
+
 bd::Boid::Boid(array2 const& pos, array2 const& vel)
     : position_{pos}, velocity_{vel} {}
 
