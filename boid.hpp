@@ -13,7 +13,6 @@ class Boid {
   array2 velocity_{0, 0};
 
  public:
-  Boid();
   Boid(array2 const&, array2 const&);
   ~Boid();
   array2 get_Pos() const;

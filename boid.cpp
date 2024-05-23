@@ -2,9 +2,6 @@
 
 #include "functions.hpp"
 
-bd::Boid::Boid()
-    : position_{bd::randomPosition()}, velocity_{bd::randomVelocity()} {}
-
 bd::Boid::Boid(array2 const& pos, array2 const& vel)
     : position_{pos}, velocity_{vel} {}
 
