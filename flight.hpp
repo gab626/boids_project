@@ -24,15 +24,14 @@ class Flight {
  private:
   Parameters par_;
   std::vector<Boid> flock_;
-  std::vector<Boid> newValues_;
 
  public:
   Flight();
   ~Flight();
   int get_N() const;
   std::vector<Boid> get_flock() const;  // non mi piace
+  void updateFlock(std::vector<Boid> const&);
   void evolve();
-  void update();
 };
 
 }  // namespace bd

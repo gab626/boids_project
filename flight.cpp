@@ -8,11 +8,11 @@
 #include "functions.hpp"
 
 bd::Flight::Flight() {
+  // std::generate(flock_.begin(), flock_.end(),
+  // [](Boid& b) -> bd::Boid { return b; });
   for (int i{}; i < par_.N; i++) {
-    bd::Boid b;
-    bd::Boid b0{{}, {}};
+    bd::Boid b{bd::randomPosition(), bd::randomVelocity()};
     flock_.push_back(b);
-    newValues_.push_back(b0);
   }
 }
 
@@ -22,8 +22,18 @@ int bd::Flight::get_N() const { return par_.N; }
 
 std::vector<bd::Boid> bd::Flight::get_flock() const { return flock_; }
 
+void bd::Flight::updateFlock(std::vector<Boid> const& newValues) {
+  std::copy(newValues.begin(), newValues.end(), flock_.begin());
+  std::for_each(flock_.begin(), flock_.end(), [=](bd::Boid& b) {
+    bd::speedLimit(b, par_.maxSpeed);
+    bd::toroidalSpace(b);
+  });
+}
+
 void bd::Flight::evolve() {
-  for (int j{0}; j < par_.N; j++) {  // trova e salva i boids vicini
+  std::vector<Boid> newValues{};
+  // std::transform(flock_.begin(), flock_.end(), newValues_.begin(), []() {});
+  for (int j{0}; j < par_.N; j++) {
     std::vector<bd::Boid*> nearIndex{};
     std::vector<bd::Boid*> sepIndex{};
     for (int i{}; i < par_.N; i++) {
@@ -36,8 +46,8 @@ void bd::Flight::evolve() {
       }
     }
 
-    auto init1 = sepIndex.size() * flock_[j].get_Pos();
-    auto v1 = par_.s * std::accumulate(sepIndex.begin(), sepIndex.end(), init1,
+    auto v1 = par_.s * std::accumulate(sepIndex.begin(), sepIndex.end(),
+                                       sepIndex.size() * flock_[j].get_Pos(),
                                        [](array2 const& p, bd::Boid* b) {
                                          return p - b->get_Pos();
                                        });
@@ -46,22 +56,13 @@ void bd::Flight::evolve() {
     array2 v2{};
     array2 v3{};
     if (sizeNear >= 1) {  // possiamo spostare questa condizione altrove?
-      array2 meanVelocity = bd::meanVelocity(nearIndex);
-      v2 = par_.a * (meanVelocity - flock_[j].get_Vel());
-
-      array2 centerMass = bd::centerMass(nearIndex);
-      v3 = par_.c * (centerMass - flock_[j].get_Pos());
+      v2 = par_.a * (bd::meanVelocity(nearIndex) - flock_[j].get_Vel());
+      v3 = par_.c * (bd::centerMass(nearIndex) - flock_[j].get_Pos());
     }
 
-    newValues_[j] = {flock_[j].get_Pos() + (.001 * flock_[j].get_Vel()),
-                     flock_[j].get_Vel() + v1 + v2 + v3};
+    newValues.push_back({flock_[j].get_Pos() + (.001 * flock_[j].get_Vel()),
+                         flock_[j].get_Vel() + v1 + v2 + v3});
   }
-}
 
-void bd::Flight::update() {
-  std::copy(newValues_.begin(), newValues_.end(), flock_.begin());
-  std::for_each(flock_.begin(), flock_.end(), [=](bd::Boid& b) {
-    bd::speedLimit(b, par_.maxSpeed);
-    bd::toroidalSpace(b);
-  });
+  bd::Flight::updateFlock(newValues);
 }
