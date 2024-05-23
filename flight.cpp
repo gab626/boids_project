@@ -8,12 +8,10 @@
 #include "functions.hpp"
 
 bd::Flight::Flight() {
-  // std::generate(flock_.begin(), flock_.end(),
-  // [](Boid& b) -> bd::Boid { return b; });
-  for (int i{}; i < par_.N; i++) {
-    bd::Boid b{bd::randomPosition(), bd::randomVelocity()};
-    flock_.push_back(b);
-  }
+  flock_.resize(par_.N);
+  std::generate(flock_.begin(), flock_.end(), []() {
+    return bd::Boid(bd::randomPosition(), bd::randomVelocity());
+  });
 }
 
 bd::Flight::~Flight() {}
@@ -23,7 +21,7 @@ int bd::Flight::get_N() const { return par_.N; }
 std::vector<bd::Boid> bd::Flight::get_flock() const { return flock_; }
 
 void bd::Flight::updateFlock(std::vector<Boid> const& newValues) {
-  std::copy(newValues.begin(), newValues.end(), flock_.begin());
+  std::move(newValues.begin(), newValues.end(), flock_.begin());
   std::for_each(flock_.begin(), flock_.end(), [=](bd::Boid& b) {
     bd::speedLimit(b, par_.maxSpeed);
     bd::toroidalSpace(b);
@@ -31,7 +29,7 @@ void bd::Flight::updateFlock(std::vector<Boid> const& newValues) {
 }
 
 void bd::Flight::evolve() {
-  std::vector<Boid> newValues{};
+  std::vector<Boid> newValues;
   // std::transform(flock_.begin(), flock_.end(), newValues_.begin(), []() {});
   for (int j{0}; j < par_.N; j++) {
     std::vector<bd::Boid*> nearIndex{};
@@ -46,11 +44,11 @@ void bd::Flight::evolve() {
       }
     }
 
-    auto v1 = par_.s * std::accumulate(sepIndex.begin(), sepIndex.end(),
-                                       sepIndex.size() * flock_[j].get_Pos(),
-                                       [](array2 const& p, bd::Boid* b) {
-                                         return p - b->get_Pos();
-                                       });
+    array2 v1 = par_.s * std::accumulate(sepIndex.begin(), sepIndex.end(),
+                                         sepIndex.size() * flock_[j].get_Pos(),
+                                         [](array2 const& p, bd::Boid* b) {
+                                           return p - b->get_Pos();
+                                         });
 
     int sizeNear = nearIndex.size();
     array2 v2{};
