@@ -1,16 +1,18 @@
+#include "flight.hpp"
+
+#include <algorithm>
 #include <functional>
 #include <numeric>
 #include <vector>
 
 #include "functions.hpp"
-#include "flight.hpp"
 
 bd::Flight::Flight() {
   for (int i{}; i < par_.N; i++) {
     bd::Boid b;
+    bd::Boid b0{{}, {}};
     flock_.push_back(b);
-    newPositions_.push_back({});
-    newVelocities_.push_back({});
+    newValues_.push_back(b0);
   }
 }
 
@@ -51,16 +53,15 @@ void bd::Flight::evolve() {
       v3 = par_.c * (centerMass - flock_[j].get_Pos());
     }
 
-    newVelocities_[j] = flock_[j].get_Vel() + v1 + v2 + v3;
-    newPositions_[j] = flock_[j].get_Pos() + (.001 * flock_[j].get_Vel());
+    newValues_[j] = {flock_[j].get_Pos() + (.001 * flock_[j].get_Vel()),
+                     flock_[j].get_Vel() + v1 + v2 + v3};
   }
 }
 
-void bd::Flight::update() {  // CERCARE ALGORITMO
-  for (int i{}; i < par_.N; i++) {
-    flock_[i].set_Pos(newPositions_[i]);
-    flock_[i].set_Vel(newVelocities_[i]);
-    bd::speedLimit(flock_[i], par_.maxSpeed);
-    bd::toroidalSpace(flock_[i]);
-  }
+void bd::Flight::update() {
+  std::copy(newValues_.begin(), newValues_.end(), flock_.begin());
+  std::for_each(flock_.begin(), flock_.end(), [=](bd::Boid& b) {
+    bd::speedLimit(b, par_.maxSpeed);
+    bd::toroidalSpace(b);
+  });
 }

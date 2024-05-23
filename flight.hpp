@@ -24,8 +24,7 @@ class Flight {
  private:
   Parameters par_;
   std::vector<Boid> flock_;
-  std::vector<array2> newPositions_;
-  std::vector<array2> newVelocities_;
+  std::vector<Boid> newValues_;
 
  public:
   Flight();
