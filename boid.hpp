@@ -14,6 +14,7 @@ class Boid {
 
  public:
   Boid();
+  Boid(array2 const&, array2 const&);
   ~Boid();
   array2 get_Pos() const;
   array2 get_Vel() const;
