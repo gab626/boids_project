@@ -5,6 +5,8 @@
 #include <numeric>
 #include <random>
 
+using bd::Boid;
+
 array2 bd::operator+(array2 const& v1, array2 const& v2) {
   return {v1[0] + v2[0], v1[1] + v2[1]};
 }
@@ -17,56 +19,56 @@ array2 bd::operator*(float c, array2 const& v) { return {c * v[0], c * v[1]}; }
 
 float bd::norm(array2 const& v) { return std::sqrt(v[0] * v[0] + v[1] * v[1]); }
 
-float bd::distance(bd::Boid const& b1, bd::Boid const& b2) {
-  return bd::norm(b1.get_Pos() - b2.get_Pos());
+float bd::distance(Boid const& b1, Boid const& b2) {
+  return bd::norm(b1.getPosition() - b2.getPosition());
 }
 
 array2 bd::separationVelocity(float s, boidPointers const& tooNear,
-                              bd::Boid const& boid) {
+                              Boid const& boid) {
   return s * std::accumulate(
                  tooNear.begin(), tooNear.end(),
-                 tooNear.size() * boid.get_Pos(),
-                 [](array2 const& p, bd::Boid* b) { return p - b->get_Pos(); });
+                 tooNear.size() * boid.getPosition(),
+                 [](array2 const& p, Boid* b) { return p - b->getPosition(); });
 }
 
 array2 bd::alignmentVelocity(float a, boidPointers const& near,
-                             bd::Boid const& boid) {
+                             Boid const& boid) {
   array2 velocity{};
   if (near.size() >= 1) {
     array2 mean = std::accumulate(
         near.begin(), near.end(), array2{},
-        [](array2 const& p, bd::Boid* const& b) { return p + b->get_Vel(); });
-    velocity = a * ((1. / near.size()) * mean - boid.get_Vel());
+        [](array2 const& p, Boid* const& b) { return p + b->getVelocity(); });
+    velocity = a * ((1. / near.size()) * mean - boid.getVelocity());
   }
   return velocity;  // implementazione simile a v3
 }
 
 array2 bd::cohesionVelocity(float c, boidPointers const& near,
-                            bd::Boid const& boid) {
+                            Boid const& boid) {
   array2 velocity{};
   if (near.size() >= 1) {
     array2 center = std::accumulate(
         near.begin(), near.end(), array2{},
-        [](array2 const& p, bd::Boid* const& b) { return p + b->get_Pos(); });
-    velocity = c * ((1. / near.size()) * center - boid.get_Pos());
+        [](array2 const& p, Boid* const& b) { return p + b->getPosition(); });
+    velocity = c * ((1. / near.size()) * center - boid.getPosition());
   }
   return velocity;  // implementazione simile a v2
 }
 
-void bd::toroidalSpace(bd::Boid& b) {
-  auto x = b.get_Pos()[0];
-  auto y = b.get_Pos()[1];
-  if (x < 0) b.set_PosX(x + 800);
-  if (x > 800) b.set_PosX(x - 800);
-  if (y < 0) b.set_PosY(y + 800);
-  if (y > 800) b.set_PosY(y - 800);
+void bd::toroidalSpace(Boid& b) {
+  auto x = b.getPosition()[0];
+  auto y = b.getPosition()[1];
+  if (x < 0) b.setPositionX(x + 800);
+  if (x > 800) b.setPositionX(x - 800);
+  if (y < 0) b.setPositionY(y + 800);
+  if (y > 800) b.setPositionY(y - 800);
 }
 
-void bd::speedLimit(bd::Boid& b, float ms) {
-  float actualSpeed = bd::norm(b.get_Vel());
+void bd::speedLimit(Boid& b, float ms) {
+  float actualSpeed = bd::norm(b.getVelocity());
   if (actualSpeed > ms) {
     float red = ms / actualSpeed;
-    b.set_Vel(red * b.get_Vel());
+    b.setVelocity(red * b.getVelocity());
   }
 }
 

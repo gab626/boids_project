@@ -8,28 +8,31 @@
 
 #include "functions.hpp"
 
-bd::Flight::Flight() {
+using bd::Boid;
+using bd::Flight;
+
+Flight::Flight() {
   flock_.resize(par_.N);
   std::generate(flock_.begin(), flock_.end(), []() {
-    return bd::Boid(bd::randomPosition(), bd::randomVelocity());
+    return Boid(bd::randomPosition(), bd::randomVelocity());
   });
 }
 
-bd::Flight::~Flight() {}
+Flight::~Flight() {}
 
-int bd::Flight::get_N() const { return par_.N; }
+int Flight::getN() const { return par_.N; }
 
-std::vector<bd::Boid> bd::Flight::get_flock() const { return flock_; }
+std::vector<Boid> Flight::getFlock() const { return flock_; }
 
-void bd::Flight::updateFlock(std::vector<Boid>& newValues) {
+void Flight::updateFlock(std::vector<Boid>& newValues) {
   std::move(newValues.begin(), newValues.end(), flock_.begin());
-  std::for_each(flock_.begin(), flock_.end(), [=](bd::Boid& b) {
+  std::for_each(flock_.begin(), flock_.end(), [=](Boid& b) {
     bd::speedLimit(b, par_.maxSpeed);
     bd::toroidalSpace(b);
   });
 }
 
-void bd::Flight::evolve() {
+void Flight::evolve() {
   std::vector<Boid> newValues;
   // newValues.resize(par_.N);
   // std::transform(flock_.begin(), flock_.end(), newValues_.begin(), []() {});
@@ -47,9 +50,9 @@ void bd::Flight::evolve() {
     array2 v2 = bd::alignmentVelocity(par_.a, nearIndex, j);
     array2 v3 = bd::cohesionVelocity(par_.c, nearIndex, j);
 
-    newValues.push_back(
-        {j.get_Pos() + (.001 * j.get_Vel()), j.get_Vel() + v1 + v2 + v3});
+    newValues.push_back({j.getPosition() + (.001 * j.getVelocity()),
+                         j.getVelocity() + v1 + v2 + v3});
   }
 
-  bd::Flight::updateFlock(newValues);
+  Flight::updateFlock(newValues);
 }

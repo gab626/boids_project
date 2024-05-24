@@ -2,25 +2,27 @@
 
 #include "functions.hpp"
 
-bd::Boid::Boid() : position_{0., 0.}, velocity_{0., 0.} {}
+using bd::Boid;
 
-bd::Boid::Boid(array2 const& pos, array2 const& vel)
-    : position_{pos}, velocity_{vel} {}
+Boid::Boid() : position_{}, velocity_{} {}
 
-bd::Boid::~Boid() {}
+Boid::Boid(array2 const& position, array2 const& velocity)
+    : position_{position}, velocity_{velocity} {}
 
-array2 bd::Boid::get_Pos() const { return position_; }
+Boid::~Boid() {}
 
-array2 bd::Boid::get_Vel() const { return velocity_; }
+array2 Boid::getPosition() const { return position_; }
 
-float bd::Boid::get_Pos_X() const { return position_[0]; }
+array2 Boid::getVelocity() const { return velocity_; }
 
-float bd::Boid::get_Pos_Y() const { return position_[1]; }
+float Boid::getPositionX() const { return position_[0]; }
 
-void bd::Boid::set_Pos(array2 const& a) { position_ = a; }
+float Boid::getPositionY() const { return position_[1]; }
 
-void bd::Boid::set_Vel(array2 const& b) { velocity_ = b; }
+void Boid::setPosition(array2 const& a) { position_ = a; }
 
-void bd::Boid::set_PosX(float x) { position_[0] = x; }
+void Boid::setVelocity(array2 const& b) { velocity_ = b; }
 
-void bd::Boid::set_PosY(float y) { position_[1] = y; }
+void Boid::setPositionX(float x) { position_[0] = x; }
+
+void Boid::setPositionY(float y) { position_[1] = y; }

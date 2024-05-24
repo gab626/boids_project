@@ -7,7 +7,7 @@
 
 namespace bd {
 
-sf::Vector2<float> boidToShape(Boid&);
+sf::Vector2<float> boidToShape(Boid const&);
 
 }
 

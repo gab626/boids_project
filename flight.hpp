@@ -28,8 +28,8 @@ class Flight {
  public:
   Flight();
   ~Flight();
-  int get_N() const;
-  std::vector<Boid> get_flock() const;  // non mi piace
+  int getN() const;
+  std::vector<Boid> getFlock() const;  // non mi piace
   void updateFlock(std::vector<Boid>&);
   void evolve();
 };
