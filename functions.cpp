@@ -21,22 +21,6 @@ float bd::distance(bd::Boid const& b1, bd::Boid const& b2) {
   return bd::norm(b1.get_Pos() - b2.get_Pos());
 }
 
-/* bool bd::checkDistance(bd::Boid const& boid, bd::Boid const& otherBoid,
-                       float d) {
-  return (&boid != &otherBoid && bd::distance(boid, otherBoid) < d);
-} */
-
-void bd::findNear(bd::Boid& mainBoid, std::vector<bd::Boid>& boidVector,
-                          float d, boidPointers nearBoids) {
-  std::for_each(boidVector.begin(), boidVector.end(),
-                [&mainBoid, d, &nearBoids](bd::Boid otherBoid) {
-                  if (&mainBoid != &otherBoid) {
-                    if (bd::distance(mainBoid, otherBoid) < d)
-                      nearBoids.push_back(&otherBoid);
-                  }
-                });
-}
-
 array2 bd::separationVelocity(float s, boidPointers const& tooNear,
                               bd::Boid const& boid) {
   return s * std::accumulate(

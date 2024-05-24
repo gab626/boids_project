@@ -30,7 +30,7 @@ class Flight {
   ~Flight();
   int get_N() const;
   std::vector<Boid> get_flock() const;  // non mi piace
-  void updateFlock(std::vector<Boid> const&);
+  void updateFlock(std::vector<Boid>&);
   void evolve();
 };
 

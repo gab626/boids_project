@@ -20,12 +20,6 @@ float norm(array2 const&);
 
 float distance(Boid const&, Boid const&);
 
-// bool checkDistance(Boid const&, Boid const&, float);
-
-// void buildNearVector(boidPointers&);
-
-void findNear(Boid&, std::vector<Boid>&, float, boidPointers);
-
 array2 separationVelocity(float, boidPointers const&, Boid const&);
 
 array2 alignmentVelocity(float, boidPointers const&, Boid const&);
