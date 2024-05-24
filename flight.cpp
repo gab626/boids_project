@@ -30,33 +30,24 @@ void bd::Flight::updateFlock(std::vector<Boid> const& newValues) {
 
 void bd::Flight::evolve() {
   std::vector<Boid> newValues;
+  // newValues.resize(par_.N);
   // std::transform(flock_.begin(), flock_.end(), newValues_.begin(), []() {});
   for (int j{0}; j < par_.N; j++) {
-    std::vector<bd::Boid*> nearIndex{};
-    std::vector<bd::Boid*> sepIndex{};
+    boidPointers nearIndex;
+    boidPointers separationIndex;
     for (int i{}; i < par_.N; i++) {
-      if (i != j) {
+      if (&flock_[i] != &flock_[j]) {
         if (bd::distance(flock_[j], flock_[i]) < par_.d)
           nearIndex.push_back(&flock_[i]);
         if (bd::distance(flock_[j], flock_[i]) <
-            par_.ds)  // sostituire flock_ i
-          sepIndex.push_back(&flock_[i]);
+            par_.ds)
+          separationIndex.push_back(&flock_[i]);
       }
     }
 
-    array2 v1 = par_.s * std::accumulate(sepIndex.begin(), sepIndex.end(),
-                                         sepIndex.size() * flock_[j].get_Pos(),
-                                         [](array2 const& p, bd::Boid* b) {
-                                           return p - b->get_Pos();
-                                         });
-
-    int sizeNear = nearIndex.size();
-    array2 v2{};
-    array2 v3{};
-    if (sizeNear >= 1) {  // possiamo spostare questa condizione altrove?
-      v2 = par_.a * (bd::meanVelocity(nearIndex) - flock_[j].get_Vel());
-      v3 = par_.c * (bd::centerMass(nearIndex) - flock_[j].get_Pos());
-    }
+    array2 v1 = bd::separationVelocity(par_.s, separationIndex, flock_[j]);
+    array2 v2 = bd::alignmentVelocity(par_.a, nearIndex, flock_[j]);
+    array2 v3 = bd::cohesionVelocity(par_.c, nearIndex, flock_[j]);
 
     newValues.push_back({flock_[j].get_Pos() + (.001 * flock_[j].get_Vel()),
                          flock_[j].get_Vel() + v1 + v2 + v3});

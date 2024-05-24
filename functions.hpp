@@ -6,6 +6,8 @@
 
 #include "boid.hpp"
 
+using boidPointers = std::vector<bd::Boid*>;
+
 namespace bd {
 
 array2 operator+(array2 const&, array2 const&);
@@ -18,9 +20,17 @@ float norm(array2 const&);
 
 float distance(Boid const&, Boid const&);
 
-array2 meanVelocity(std::vector<Boid*> const&);
+// bool checkDistance(Boid const&, Boid const&, float);
 
-array2 centerMass(std::vector<Boid*> const&);
+// void buildNearVector(boidPointers&);
+
+void findNear(Boid&, std::vector<Boid>&, float, boidPointers);
+
+array2 separationVelocity(float, boidPointers const&, Boid const&);
+
+array2 alignmentVelocity(float, boidPointers const&, Boid const&);
+
+array2 cohesionVelocity(float, boidPointers const&, Boid const&);
 
 void toroidalSpace(Boid&);
 
