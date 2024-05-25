@@ -56,12 +56,12 @@ array2 bd::cohesionVelocity(float c, boidPointers const& near,
 }
 
 void bd::toroidalSpace(Boid& b) {
-  auto x = b.getPosition()[0];
-  auto y = b.getPosition()[1];
-  if (x < 0) b.setPositionX(x + 800);
-  if (x > 800) b.setPositionX(x - 800);
-  if (y < 0) b.setPositionY(y + 800);
-  if (y > 800) b.setPositionY(y - 800);
+  auto x = b.getPositionX();
+  auto y = b.getPositionY();
+  if (x < 0) b.setPositionX(x + 1000);
+  if (x > 1000) b.setPositionX(x - 1000);
+  if (y < 0) b.setPositionY(y + 1000);
+  if (y > 1000) b.setPositionY(y - 1000);
 }
 
 void bd::speedLimit(Boid& b, float ms) {
@@ -83,7 +83,7 @@ array2 bd::randomPosition() {  // provare algoritmi
 array2 bd::randomVelocity() {
   std::random_device r;
   std::default_random_engine eng(r());
-  std::uniform_real_distribution<float> unif(-200, 200);
+  std::uniform_real_distribution<float> unif(-500, 500);
   array2 velocity = {unif(eng), unif(eng)};
   return velocity;
 }
