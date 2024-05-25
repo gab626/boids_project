@@ -2,15 +2,23 @@
 
 #include <algorithm>
 #include <cmath>
+#include <numbers>
 #include <numeric>
 #include <random>
 
 using bd::Boid;
 
-float bd::norm(vector2 const& v) { return std::sqrt(v.x * v.x + v.y * v.y); }
+float bd::norm(vector2 const& velocity) {
+  return std::sqrt(velocity.x * velocity.x + velocity.y * velocity.y);
+}
 
-float bd::distance(Boid const& b1, Boid const& b2) {
-  return bd::norm(b1.getPosition() - b2.getPosition());
+float bd::distance(Boid const& firstBoid, Boid const& secondBoid) {
+  return bd::norm(firstBoid.getPosition() - secondBoid.getPosition());
+}
+
+float bd::orientation(Boid const& boid) {
+  float angle = (-1.f) * (std::atan2(boid.getVelocity().y, boid.getVelocity().x) + M_PI);
+  return angle;
 }
 
 vector2 bd::separationVelocity(float s, boidPointers const& tooNear,

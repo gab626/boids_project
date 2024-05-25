@@ -26,10 +26,11 @@ std::vector<Boid> Flock::getFlock() const { return flock_; }
 
 void Flock::updateFlock(std::vector<Boid>& newValues) {
   std::move(newValues.begin(), newValues.end(), flock_.begin());
-  std::for_each(flock_.begin(), flock_.end(), [=](Boid& b) {
-    bd::speedLimit(b, par_.maxSpeed);
-    bd::toroidalSpace(b);
-  });
+  std::for_each(flock_.begin(), flock_.end(),
+                [&](Boid& b) {  // cattura con this? come funziona?
+                  bd::speedLimit(b, par_.maxSpeed);
+                  bd::toroidalSpace(b);
+                });
 }
 
 void Flock::evolve() {

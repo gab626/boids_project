@@ -12,7 +12,9 @@ namespace bd {
 
 float norm(vector2 const&);
 
-float distance(Boid const&, Boid const&);
+float distance(Boid const&, Boid const&);  // perché Boid e non vector2?
+
+float orientation(Boid const&);  // idem qua
 
 vector2 separationVelocity(float, boidPointers const&, Boid const&);
 
