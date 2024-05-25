@@ -12,7 +12,7 @@ FetchContent_MakeAvailable(SFML)
 
 add_executable(BoidsProject prova.cpp functions.cpp boid.cpp flock.cpp shape.cpp)
 target_link_libraries(BoidsProject PRIVATE sfml-graphics)
-target_compile_features(BoidsProject PRIVATE cxx_std_17)
+target_compile_features(BoidsProject PRIVATE cxx_std_20)
 
 if(WIN32)
     add_custom_command(
