@@ -1,5 +1,5 @@
-#ifndef GRAPHICS_HPP
-#define GRAPHICS_HPP
+#ifndef SHAPE_HPP
+#define SHAPE_HPP
 
 #include <SFML/Graphics.hpp>
 
@@ -14,8 +14,6 @@ class BoidShape : public sf::ConvexShape {
   virtual std::size_t getPointCount() const;
   virtual sf::Vector2f getPoint(std::size_t index) const;
 };
-
-sf::Vector2f boidToShape(Boid const&);
 
 }  // namespace bd
 

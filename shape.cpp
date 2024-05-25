@@ -1,4 +1,4 @@
-#include "graphics.hpp"
+#include "shape.hpp"
 
 using bd::Boid;
 using bd::BoidShape;
@@ -31,8 +31,4 @@ sf::Vector2f BoidShape::getPoint(std::size_t index) const {
     default:
       return sf::Vector2f(0.f, 0.f);
   }
-}
-
-sf::Vector2f bd::boidToShape(Boid const& b) {
-  return {b.getPositionX(), b.getPositionY()};
 }
