@@ -12,7 +12,7 @@ namespace bd {
 
 struct Parameters {  // rivedere nomi parametri?
   float d = 100;     // parametri temporanei fissati
-  float ds = 30;
+  float ds = 20;
   float s = 0.5;
   float a = 0.05;
   float c = 0.1;

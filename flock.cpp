@@ -1,4 +1,4 @@
-#include "flight.hpp"
+#include "flock.hpp"
 
 #include <algorithm>
 #include <functional>
@@ -36,7 +36,7 @@ void Flock::evolve() {
   std::vector<Boid> newValues;
   // newValues.resize(par_.N);
   // std::transform(flock_.begin(), flock_.end(), newValues_.begin(), []() {});
-  for (Boid const& j : flock_) {  // CERCARE KD TREE PER MIGLIORARE QUA
+  for (Boid const& j : flock_) {  // CREARE QUAD TREE PER MIGLIORARE QUA
     boidPointers nearIndex;
     boidPointers separationIndex;
     for (Boid& i : flock_) {
