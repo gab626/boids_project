@@ -1,5 +1,5 @@
-#ifndef FLIGHT_HPP
-#define FLIGHT_HPP
+#ifndef FLOCK_HPP
+#define FLOCK_HPP
 
 #include <array>
 #include <vector>
@@ -10,24 +10,24 @@ using array2 = std::array<float, 2>;
 
 namespace bd {
 
-struct Parameters {
-  float d = 100;  // parametri temporanei fissati
-  float ds = 50;
+struct Parameters {  // rivedere nomi parametri?
+  float d = 100;     // parametri temporanei fissati
+  float ds = 30;
   float s = 0.5;
   float a = 0.05;
-  float c = 0.05;
-  int N = 20;
+  float c = 0.1;
+  int N = 40;
   float maxSpeed = 2000.;
 };
 
-class Flight {
+class Flock {
  private:
   Parameters par_;
   std::vector<Boid> flock_;
 
  public:
-  Flight();
-  ~Flight();
+  Flock();
+  ~Flock();
   int getN() const;
   std::vector<Boid> getFlock() const;  // non mi piace
   void updateFlock(std::vector<Boid>&);

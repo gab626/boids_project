@@ -9,22 +9,22 @@
 #include "functions.hpp"
 
 using bd::Boid;
-using bd::Flight;
+using bd::Flock;
 
-Flight::Flight() {
+Flock::Flock() {
   flock_.resize(par_.N);
   std::generate(flock_.begin(), flock_.end(), []() {
     return Boid(bd::randomPosition(), bd::randomVelocity());
   });
 }
 
-Flight::~Flight() {}
+Flock::~Flock() {}
 
-int Flight::getN() const { return par_.N; }
+int Flock::getN() const { return par_.N; }
 
-std::vector<Boid> Flight::getFlock() const { return flock_; }
+std::vector<Boid> Flock::getFlock() const { return flock_; }
 
-void Flight::updateFlock(std::vector<Boid>& newValues) {
+void Flock::updateFlock(std::vector<Boid>& newValues) {
   std::move(newValues.begin(), newValues.end(), flock_.begin());
   std::for_each(flock_.begin(), flock_.end(), [=](Boid& b) {
     bd::speedLimit(b, par_.maxSpeed);
@@ -32,7 +32,7 @@ void Flight::updateFlock(std::vector<Boid>& newValues) {
   });
 }
 
-void Flight::evolve() {
+void Flock::evolve() {
   std::vector<Boid> newValues;
   // newValues.resize(par_.N);
   // std::transform(flock_.begin(), flock_.end(), newValues_.begin(), []() {});
@@ -54,5 +54,5 @@ void Flight::evolve() {
                          j.getVelocity() + v1 + v2 + v3});
   }
 
-  Flight::updateFlock(newValues);
+  Flock::updateFlock(newValues);
 }
