@@ -46,11 +46,11 @@ void Flock::evolve() {
       }
     }
 
-    array2 v1 = bd::separationVelocity(par_.s, separationIndex, j);
-    array2 v2 = bd::alignmentVelocity(par_.a, nearIndex, j);
-    array2 v3 = bd::cohesionVelocity(par_.c, nearIndex, j);
+    vector2 v1 = bd::separationVelocity(par_.s, separationIndex, j);
+    vector2 v2 = bd::alignmentVelocity(par_.a, nearIndex, j);
+    vector2 v3 = bd::cohesionVelocity(par_.c, nearIndex, j);
 
-    newValues.push_back({j.getPosition() + (.001 * j.getVelocity()),
+    newValues.push_back({j.getPosition() + (j.getVelocity() * .001f),
                          j.getVelocity() + v1 + v2 + v3});
   }
 

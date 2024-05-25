@@ -6,25 +6,19 @@ using bd::Boid;
 
 Boid::Boid() : position_{}, velocity_{} {}
 
-Boid::Boid(array2 const& position, array2 const& velocity)
+Boid::Boid(vector2 const& position, vector2 const& velocity)
     : position_{position}, velocity_{velocity} {}
 
 Boid::~Boid() {}
 
-array2 Boid::getPosition() const { return position_; }
+vector2 Boid::getPosition() const { return position_; }
 
-array2 Boid::getVelocity() const { return velocity_; }
+vector2 Boid::getVelocity() const { return velocity_; }
 
-float Boid::getPositionX() const { return position_[0]; }
+void Boid::setPosition(vector2 const& position) { position_ = position; }
 
-float Boid::getPositionY() const { return position_[1]; }
+void Boid::setVelocity(vector2 const& velocity) { velocity_ = velocity; }
 
-void Boid::setPosition(array2 const& a) { position_ = a; }
+void Boid::setPositionX(float x) { position_.x = x; }
 
-void Boid::setVelocity(array2 const& b) { velocity_ = b; }
-
-void Boid::setPositionX(float x) { position_[0] = x; }
-
-void Boid::setPositionY(float y) { position_[1] = y; }
-
-sf::Vector2f Boid::boidToShape() { return {position_[0], position_[1]}; }
+void Boid::setPositionY(float y) { position_.y = y; }

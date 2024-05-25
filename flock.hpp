@@ -6,18 +6,16 @@
 
 #include "boid.hpp"
 
-using array2 = std::array<float, 2>;
-
 namespace bd {
 
 struct Parameters {  // rivedere nomi parametri?
-  float d = 100;     // parametri temporanei fissati
-  float ds = 20;
-  float s = 0.5;
-  float a = 0.05;
-  float c = 0.1;
+  float d = 100.f;   // parametri temporanei fissati
+  float ds = 40.f;
+  float s = 0.5f;
+  float a = 0.05f;
+  float c = 0.05f;
   int N = 40;
-  float maxSpeed = 2000.;
+  float maxSpeed = 2000.f;
 };
 
 class Flock {
@@ -29,8 +27,8 @@ class Flock {
   Flock();
   ~Flock();
   int getN() const;
-  std::vector<Boid> getFlock() const;  // non mi piace
-  void updateFlock(std::vector<Boid>&);
+  std::vector<Boid> getFlock() const;    // non mi piace
+  void updateFlock(std::vector<Boid>&);  // forse riaggiungere oldBoid vector
   void evolve();
 };
 

@@ -4,28 +4,25 @@
 #include <SFML/Graphics.hpp>
 #include <array>
 
-using array2 = std::array<float, 2>;
+using vector2 = sf::Vector2f;
 
 namespace bd {
 
 class Boid {
  private:
-  array2 position_{0.f, 0.f};
-  array2 velocity_{0.f, 0.f};
+  vector2 position_;
+  vector2 velocity_;
 
  public:
   Boid();
-  Boid(array2 const&, array2 const&);
+  Boid(vector2 const&, vector2 const&);
   ~Boid();
-  array2 getPosition() const;
-  array2 getVelocity() const;
-  float getPositionX() const;
-  float getPositionY() const;
-  void setPosition(array2 const&);
-  void setVelocity(array2 const&);
+  vector2 getPosition() const;
+  vector2 getVelocity() const;
+  void setPosition(vector2 const&);
+  void setVelocity(vector2 const&);
   void setPositionX(float);
   void setPositionY(float);
-  sf::Vector2f boidToShape();
 };
 
 }  // namespace bd
