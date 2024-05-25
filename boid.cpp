@@ -26,3 +26,5 @@ void Boid::setVelocity(array2 const& b) { velocity_ = b; }
 void Boid::setPositionX(float x) { position_[0] = x; }
 
 void Boid::setPositionY(float y) { position_[1] = y; }
+
+sf::Vector2f Boid::boidToShape() { return {position_[0], position_[1]}; }
