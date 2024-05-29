@@ -19,12 +19,14 @@ Boid::Boid()
     : position_{bd::randomPosition()}, velocity_{bd::randomVelocity()} {
   Boid::setupShape();
   boidShape_.setPosition(position_);
+  boidShape_.setRotation(bd::orientation(velocity_));
 }
 
 Boid::Boid(vector2 const& position, vector2 const& velocity)
     : position_{position}, velocity_{velocity} {
   Boid::setupShape();
-  boidShape_.setPosition(position_);
+  boidShape_.setPosition(position);
+  boidShape_.setRotation(bd::orientation(velocity));
 }
 
 Boid::~Boid() {}
