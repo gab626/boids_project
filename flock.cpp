@@ -14,7 +14,7 @@ using bd::Flock;
 Flock::Flock() {
   flock_.resize(par_.N);
   std::generate(flock_.begin(), flock_.end(), []() {
-    return Boid(bd::randomPosition(), bd::randomVelocity());
+    return Boid();
   });
 }
 
@@ -51,7 +51,7 @@ void Flock::evolve() {
     vector2 v2 = bd::alignmentVelocity(par_.a, nearIndex, j);
     vector2 v3 = bd::cohesionVelocity(par_.c, nearIndex, j);
 
-    newValues.push_back({j.getPosition() + (j.getVelocity() * .001f),
+    newValues.push_back({j.getPosition() + (j.getVelocity() * par_.deltaT),
                          j.getVelocity() + v1 + v2 + v3});
   }
 
