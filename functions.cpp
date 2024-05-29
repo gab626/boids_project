@@ -1,8 +1,9 @@
 #include "functions.hpp"
 
+#include <math.h>
+
 #include <algorithm>
 #include <cmath>
-#include <numbers>
 #include <numeric>
 #include <random>
 
@@ -16,9 +17,12 @@ float bd::distance(Boid const& firstBoid, Boid const& secondBoid) {
   return bd::norm(firstBoid.getPosition() - secondBoid.getPosition());
 }
 
-float bd::orientation(Boid const& boid) {
-  float angle = (-1.f) * (std::atan2(boid.getVelocity().y, boid.getVelocity().x) + M_PI);
-  return angle;
+float bd::orientation(vector2 const& velocity) {
+  float angleRadians =
+      std::atan2(velocity.y, velocity.x) + M_PI_2f;  // M_PI? è il miglior modo?
+  float angleDegrees = angleRadians * 360 / (2 * M_PIf);
+  return angleDegrees;  // ho dovuto togliere il meno, mi sa che non avevo
+                        // capito benissimo come funziona, rivedere
 }
 
 vector2 bd::separationVelocity(float s, boidPointers const& tooNear,
@@ -76,7 +80,7 @@ void bd::speedLimit(Boid& b, float ms) {
 vector2 bd::randomPosition() {  // provare algoritmi
   std::random_device r;
   std::default_random_engine eng(r());
-  std::uniform_real_distribution<float> unif(0, 800);
+  std::uniform_real_distribution<float> unif(0, 1000);
   vector2 position = {unif(eng), unif(eng)};
   return position;
 }
