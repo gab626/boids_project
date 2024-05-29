@@ -61,12 +61,12 @@ vector2 bd::cohesionVelocity(float c, boidPointers const& near,
 }
 
 void bd::toroidalSpace(Boid& b) {
-  auto x = b.getPosition().x;
-  auto y = b.getPosition().y;
-  if (x < 0) b.setPositionX(x + 1000);
-  if (x > 1000) b.setPositionX(x - 1000);
-  if (y < 0) b.setPositionY(y + 1000);
-  if (y > 1000) b.setPositionY(y - 1000);
+  float x = b.getPosition().x;
+  float y = b.getPosition().y;
+  if (x < 0.f) b.setPositionX(x + 1000);
+  if (x > 1000.f) b.setPositionX(x - 1000);
+  if (y < 0.f) b.setPositionY(y + 1000);
+  if (y > 1000.f) b.setPositionY(y - 1000);
 }
 
 void bd::speedLimit(Boid& b, float ms) {
@@ -77,9 +77,9 @@ void bd::speedLimit(Boid& b, float ms) {
   }
 }
 
-vector2 bd::randomVector(float minimum, float maximum) {
+float bd::randomFloat(float minimum, float maximum) {
   std::random_device seed;
   std::default_random_engine engine(seed());
   std::uniform_real_distribution<float> unif(minimum, maximum);
-  return {unif(engine), unif(engine)};
+  return unif(engine);
 }
