@@ -4,16 +4,36 @@
 
 using bd::Boid;
 
-Boid::Boid() : position_{}, velocity_{} {}
+void Boid::setupShape() {
+  boidShape_.setPointCount(4);
+  boidShape_.setPoint(0, vector2(0.f, 5.f));
+  boidShape_.setPoint(1, vector2(2.f, 0.f));
+  boidShape_.setPoint(2, vector2(4.f, 5.f));
+  boidShape_.setPoint(3, vector2(2.f, 4.f));
+  boidShape_.setFillColor(sf::Color::Green);
+  boidShape_.setOrigin({2.f, 3.f});
+  boidShape_.setScale(2.5f, 2.5f);
+}
+
+Boid::Boid()
+    : position_{bd::randomPosition()}, velocity_{bd::randomVelocity()} {
+  Boid::setupShape();
+  boidShape_.setPosition(position_);
+}
 
 Boid::Boid(vector2 const& position, vector2 const& velocity)
-    : position_{position}, velocity_{velocity} {}
+    : position_{position}, velocity_{velocity} {
+  Boid::setupShape();
+  boidShape_.setPosition(position_);
+}
 
 Boid::~Boid() {}
 
 vector2 Boid::getPosition() const { return position_; }
 
 vector2 Boid::getVelocity() const { return velocity_; }
+
+sf::ConvexShape Boid::getShape() const {return boidShape_; }
 
 void Boid::setPosition(vector2 const& position) { position_ = position; }
 
@@ -22,3 +42,5 @@ void Boid::setVelocity(vector2 const& velocity) { velocity_ = velocity; }
 void Boid::setPositionX(float x) { position_.x = x; }
 
 void Boid::setPositionY(float y) { position_.y = y; }
+
+void Boid::setShapePosition(vector2 const& position) { boidShape_.setPosition(position); }
