@@ -14,6 +14,10 @@ float norm(vector2 const&);
 
 float distance(Boid const&, Boid const&);  // perché Boid e non vector2?
 
+float mean();
+
+float standardDeviation();
+
 float orientation(vector2 const&);  // idem qua
 
 vector2 separationVelocity(float, boidPointers const&, Boid const&);
@@ -26,7 +30,7 @@ void toroidalSpace(Boid&);
 
 void speedLimit(Boid&, float);
 
-vector2 randomVector(float, float);
+float randomFloat(float, float);
 
 }  // namespace bd
 
