@@ -26,9 +26,7 @@ void toroidalSpace(Boid&);
 
 void speedLimit(Boid&, float);
 
-vector2 randomPosition();
-
-vector2 randomVelocity();
+vector2 randomVector(float, float);
 
 }  // namespace bd
 

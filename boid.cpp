@@ -15,8 +15,9 @@ void Boid::setupShape() {
   boidShape_.setScale(2.5f, 2.5f);
 }
 
-Boid::Boid()
-    : position_{bd::randomPosition()}, velocity_{bd::randomVelocity()} {
+Boid::Boid()  // si potrebbe fare con un generate, da valutare
+    : position_{bd::randomVector(0.f, 1000.f)},
+      velocity_{bd::randomVector(-400.f, 400.f)} {
   Boid::setupShape();
   boidShape_.setPosition(position_);
   boidShape_.setRotation(bd::orientation(velocity_));
@@ -35,7 +36,7 @@ vector2 Boid::getPosition() const { return position_; }
 
 vector2 Boid::getVelocity() const { return velocity_; }
 
-sf::ConvexShape Boid::getShape() const {return boidShape_; }
+sf::ConvexShape Boid::getShape() const { return boidShape_; }
 
 void Boid::setPosition(vector2 const& position) { position_ = position; }
 
@@ -45,4 +46,6 @@ void Boid::setPositionX(float x) { position_.x = x; }
 
 void Boid::setPositionY(float y) { position_.y = y; }
 
-void Boid::setShapePosition(vector2 const& position) { boidShape_.setPosition(position); }
+void Boid::setShapePosition(vector2 const& position) {
+  boidShape_.setPosition(position);
+}

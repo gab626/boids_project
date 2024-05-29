@@ -20,7 +20,7 @@ float bd::distance(Boid const& firstBoid, Boid const& secondBoid) {
 float bd::orientation(vector2 const& velocity) {
   float angleRadians =
       std::atan2(velocity.y, velocity.x) + M_PI_2f;  // M_PI? è il miglior modo?
-  float angleDegrees = angleRadians * 360 / (2 * M_PIf);
+  float angleDegrees = angleRadians * 360.f / (2.f * M_PIf);
   return angleDegrees;  // ho dovuto togliere il meno, mi sa che non avevo
                         // capito benissimo come funziona, rivedere
 }
@@ -77,18 +77,9 @@ void bd::speedLimit(Boid& b, float ms) {
   }
 }
 
-vector2 bd::randomPosition() {  // provare algoritmi
-  std::random_device r;
-  std::default_random_engine eng(r());
-  std::uniform_real_distribution<float> unif(0, 1000);
-  vector2 position = {unif(eng), unif(eng)};
-  return position;
-}
-
-vector2 bd::randomVelocity() {
-  std::random_device r;
-  std::default_random_engine eng(r());
-  std::uniform_real_distribution<float> unif(-500, 500);
-  vector2 velocity = {unif(eng), unif(eng)};
-  return velocity;
+vector2 bd::randomVector(float minimum, float maximum) {
+  std::random_device seed;
+  std::default_random_engine engine(seed());
+  std::uniform_real_distribution<float> unif(minimum, maximum);
+  return {unif(engine), unif(engine)};
 }
