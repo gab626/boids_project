@@ -16,8 +16,8 @@ void Boid::setupShape() {
 }
 
 Boid::Boid()  // si potrebbe fare con un generate, da valutare
-    : position_{bd::randomFloat(0.f, 1000.f), bd::randomFloat(0.f, 1000.f)},
-      velocity_{bd::randomFloat(-400.f, 400.f), bd::randomFloat(-400.f, 400.f)} {
+    : position_{bd::randomFloat(0.f, 800.f), bd::randomFloat(0.f, 800.f)},
+      velocity_{bd::randomFloat(-1000.f, 1000.f), bd::randomFloat(-1000.f, 1000.f)} {
   Boid::setupShape();
   boidShape_.setPosition(position_);
   boidShape_.setRotation(bd::orientation(velocity_));
