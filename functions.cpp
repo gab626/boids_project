@@ -17,6 +17,16 @@ float bd::distance(Boid const& firstBoid, Boid const& secondBoid) {
   return bd::norm(firstBoid.getPosition() - secondBoid.getPosition());
 }
 
+float bd::mean(std::vector<float> values) {
+  return std::accumulate(values.begin(), values.end(), 0) / values.size();
+}
+
+float bd::standardDeviation(std::vector<float> valuesSquared) {
+  return std::sqrt(
+      std::accumulate(valuesSquared.begin(), valuesSquared.end(), 0) /
+      (valuesSquared.size() - 1));
+}
+
 float bd::orientation(vector2 const& velocity) {
   float angleRadians =
       std::atan2(velocity.y, velocity.x) + M_PI_2f;  // M_PI? è il miglior modo?
@@ -63,10 +73,10 @@ vector2 bd::cohesionVelocity(float c, boidPointers const& near,
 void bd::toroidalSpace(Boid& b) {
   float x = b.getPosition().x;
   float y = b.getPosition().y;
-  if (x < 0.f) b.setPositionX(x + 1000);
-  if (x > 1000.f) b.setPositionX(x - 1000);
-  if (y < 0.f) b.setPositionY(y + 1000);
-  if (y > 1000.f) b.setPositionY(y - 1000);
+  if (x < 0.f) b.setPositionX(x + 800);
+  if (x > 800.f) b.setPositionX(x - 800);
+  if (y < 0.f) b.setPositionY(y + 800);
+  if (y > 800.f) b.setPositionY(y - 800);
 }
 
 void bd::speedLimit(Boid& b, float ms) {

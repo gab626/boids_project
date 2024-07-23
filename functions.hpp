@@ -14,9 +14,9 @@ float norm(vector2 const&);
 
 float distance(Boid const&, Boid const&);  // perché Boid e non vector2?
 
-float mean();
+float mean(std::vector<float>);
 
-float standardDeviation();
+float standardDeviation(std::vector<float>);
 
 float orientation(vector2 const&);  // idem qua
 
