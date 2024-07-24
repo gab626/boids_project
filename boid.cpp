@@ -11,13 +11,13 @@ void Boid::setupShape() {
   boidShape_.setPoint(2, vector2(4.f, 5.f));
   boidShape_.setPoint(3, vector2(2.f, 4.f));
   boidShape_.setFillColor(sf::Color::Green);
-  boidShape_.setOrigin({2.f, 3.f});
-  boidShape_.setScale(2.5f, 2.5f);
+  boidShape_.setOrigin({2.f, 2.5f});
+  boidShape_.setScale(2.f, 2.f);
 }
 
 Boid::Boid()  // si potrebbe fare con un generate, da valutare
-    : position_{bd::randomFloat(0.f, 800.f), bd::randomFloat(0.f, 800.f)},
-      velocity_{bd::randomFloat(-1000.f, 1000.f), bd::randomFloat(-1000.f, 1000.f)} {
+    : position_{bd::randomFloat(0.f, 1600.f), bd::randomFloat(0.f, 900.f)},
+      velocity_{bd::randomVelocity(1000.f, 2000.f)} {
   Boid::setupShape();
   boidShape_.setPosition(position_);
   boidShape_.setRotation(bd::orientation(velocity_));
