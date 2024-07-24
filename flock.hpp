@@ -16,14 +16,14 @@ struct Statistics {
 };
 
 struct Parameters {  // rivedere nomi parametri?
-  float d = 100.f;   // parametri temporanei fissati
-  float ds = 30.f;
-  float s = 0.4f;
-  float a = 0.02f;
-  float c = 0.01f;
-  int N = 30;
+  float d = 70.f;   // parametri temporanei fissati
+  float ds = 20.f;
+  float s = 3.f;
+  float a = 0.05f;
+  float c = 0.02f;
+  int N = 50;
   float maxSpeed = 5000.f;
-  float deltaT = .001f;
+  float deltaT = .002f;
 };
 
 class Flock {
