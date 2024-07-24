@@ -28,7 +28,6 @@ void Flock::updateFlock(std::vector<Boid>& newValues) {
   std::for_each(flock_.begin(), flock_.end(),
                 [&](Boid& b) {  // cattura con this? come funziona?
                   bd::speedLimit(b, par_.maxSpeed);
-                  bd::toroidalSpace(b);
                 });
 }
 
@@ -68,9 +67,10 @@ void Flock::evolve() {
     vector2 v1 = bd::separationVelocity(par_.s, separationIndex, j);
     vector2 v2 = bd::alignmentVelocity(par_.a, nearIndex, j);
     vector2 v3 = bd::cohesionVelocity(par_.c, nearIndex, j);
+    vector2 vw = bd::closedSpace(j);
 
     auto newPosition = j.getPosition() + (j.getVelocity() * par_.deltaT);
-    auto newVelocity = j.getVelocity() + v1 + v2 + v3;
+    auto newVelocity = j.getVelocity() + v1 + v2 + v3 + vw;
 
     speeds.push_back(bd::norm(newVelocity));
 
@@ -88,6 +88,6 @@ void Flock::evolve() {
   float speedStd = bd::standardDeviation(speeds);
 
   Flock::saveStatistics(distanceMean, distanceStd, speedMean, speedStd);
-  Flock::printStatistics();
+  // Flock::printStatistics();
   Flock::updateFlock(newValues);
 }
