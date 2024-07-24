@@ -9,8 +9,8 @@
 
 using bd::Boid;
 
-float bd::norm(vector2 const& velocity) {
-  return std::sqrt(velocity.x * velocity.x + velocity.y * velocity.y);
+float bd::norm(vector2 const& vector) {
+  return std::sqrt(vector.x * vector.x + vector.y * vector.y);
 }
 
 float bd::distance(Boid const& firstBoid, Boid const& secondBoid) {
@@ -70,13 +70,16 @@ vector2 bd::cohesionVelocity(float c, boidPointers const& near,
   return velocity;  // implementazione simile a v2
 }
 
-void bd::toroidalSpace(Boid& b) {
-  float x = b.getPosition().x;
-  float y = b.getPosition().y;
-  if (x < 0.f) b.setPositionX(x + 800);
-  if (x > 800.f) b.setPositionX(x - 800);
-  if (y < 0.f) b.setPositionY(y + 800);
-  if (y > 800.f) b.setPositionY(y - 800);
+vector2 bd::closedSpace(Boid const& boid) {
+  float ws = 3.f;  // wall separation
+  vector2 velocity{};
+  float x = boid.getPosition().x;
+  if (x < 100.f) velocity.x = ws * (100.f - x);
+  if (x > 1500.f) velocity.x = ws * (1500.f - x);
+  float y = boid.getPosition().y;
+  if (y < 100.f) velocity.y = ws * (100.f - y);
+  if (y > 800.f) velocity.y = ws * (800.f - y);
+  return velocity;
 }
 
 void bd::speedLimit(Boid& b, float ms) {
@@ -92,4 +95,10 @@ float bd::randomFloat(float minimum, float maximum) {
   std::default_random_engine engine(seed());
   std::uniform_real_distribution<float> unif(minimum, maximum);
   return unif(engine);
+}
+
+vector2 bd::randomVelocity(float minimum, float maximum) {
+  float rho = bd::randomFloat(minimum, maximum);
+  float theta = bd::randomFloat(0, 2.f * M_PI);
+  return {rho * std::cos(theta), rho * std::sin(theta)};
 }

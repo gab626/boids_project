@@ -26,11 +26,13 @@ vector2 alignmentVelocity(float, boidPointers const&, Boid const&);
 
 vector2 cohesionVelocity(float, boidPointers const&, Boid const&);
 
-void toroidalSpace(Boid&);
+vector2 closedSpace(Boid const&);
 
 void speedLimit(Boid&, float);
 
 float randomFloat(float, float);
+
+vector2 randomVelocity(float, float);
 
 }  // namespace bd
 
