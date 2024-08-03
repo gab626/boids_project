@@ -2,7 +2,6 @@
 #define BOID_HPP
 
 #include <SFML/Graphics.hpp>
-#include <array>
 
 using vector2 = sf::Vector2f;
 
@@ -13,11 +12,12 @@ class Boid {
   vector2 position_;
   vector2 velocity_;
   sf::ConvexShape boidShape_;
-  void setupShape();
+  void setupShape(sf::Color);
 
  public:
   Boid();
-  Boid(vector2 const&, vector2 const&);
+  Boid(sf::Color);
+  Boid(vector2 const&, vector2 const&, sf::Color);
   ~Boid();
   vector2 getPosition() const;
   vector2 getVelocity() const;
