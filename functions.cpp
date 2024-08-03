@@ -9,11 +9,11 @@
 
 using bd::Boid;
 
-float bd::norm(vector2 const& vector) {
+float bd::norm(const vector2& vector) {
   return std::sqrt(vector.x * vector.x + vector.y * vector.y);
 }
 
-float bd::distance(Boid const& firstBoid, Boid const& secondBoid) {
+float bd::distance(const Boid& firstBoid, const Boid& secondBoid) {
   return bd::norm(firstBoid.getPosition() - secondBoid.getPosition());
 }
 
@@ -27,7 +27,7 @@ float bd::standardDeviation(std::vector<float> valuesSquared) {
       (valuesSquared.size() - 1));
 }
 
-float bd::orientation(vector2 const& velocity) {
+float bd::orientation(const vector2& velocity) {
   float angleRadians =
       std::atan2(velocity.y, velocity.x) + M_PI_2f;  // M_PI? è il miglior modo?
   float angleDegrees = angleRadians * 360.f / (2.f * M_PIf);
@@ -35,58 +35,61 @@ float bd::orientation(vector2 const& velocity) {
                         // capito benissimo come funziona, rivedere
 }
 
-vector2 bd::separationVelocity(float s, boidPointers const& tooNear,
-                               Boid const& boid) {
+vector2 bd::separationVelocity(float s, const boidPointers& tooNear,
+                               const Boid& boid) {
   float tooNearSize = tooNear.size();
   return std::accumulate(
              tooNear.begin(), tooNear.end(), boid.getPosition() * tooNearSize,
-             [](vector2 const& p, Boid* b) { return p - b->getPosition(); }) *
+             [](const vector2& p, Boid* b) { return p - b->getPosition(); }) *
          s;
 }
 
-vector2 bd::alignmentVelocity(float a, boidPointers const& near,
-                              Boid const& boid) {
+vector2 bd::alignmentVelocity(float a, const boidPointers& near,
+                              const Boid& boid) {
   float nearSize = near.size();
+  float scaling{};
   vector2 velocity{};
   if (nearSize >= 1) {
-    vector2 mean = std::accumulate(
-        near.begin(), near.end(), vector2{},
-        [](vector2 const& p, Boid* const& b) { return p + b->getVelocity(); });
-    velocity = (mean * (1.f / nearSize) - boid.getVelocity()) * a;
+    vector2 mean = std::accumulate(near.begin(), near.end(), vector2{},
+                                   [](const vector2& p, Boid* b) {
+                                     return p + b->getVelocity();
+                                   }) /
+                   nearSize;
+    scaling = bd::norm(boid.getVelocity()) / bd::norm(mean);
+    velocity = (mean * scaling - boid.getVelocity());
   }
-  return velocity;  // implementazione simile a v3
+  return velocity * a;  // implementazione simile a v3
 }
 
-vector2 bd::cohesionVelocity(float c, boidPointers const& near,
-                             Boid const& boid) {
+vector2 bd::cohesionVelocity(float c, const boidPointers& near,
+                             const Boid& boid) {
   float nearSize = near.size();
   vector2 velocity{};
   if (nearSize >= 1) {
     vector2 center = std::accumulate(
         near.begin(), near.end(), vector2{},
-        [](vector2 const& p, Boid* const& b) { return p + b->getPosition(); });
-    velocity = (center * (1.f / nearSize) - boid.getPosition()) * c;
+        [](const vector2& p, Boid* b) { return p + b->getPosition(); });
+    velocity = (center * (1.f / nearSize) - boid.getPosition());
   }
-  return velocity;  // implementazione simile a v2
+  return velocity * c;  // implementazione simile a v2
 }
 
-vector2 bd::closedSpace(Boid const& boid) {
-  float ws = 3.f;  // wall separation
+vector2 bd::closedSpace(const Boid& boid) {
   vector2 velocity{};
   float x = boid.getPosition().x;
-  if (x < 100.f) velocity.x = ws * (100.f - x);
-  if (x > 1500.f) velocity.x = ws * (1500.f - x);
+  if (x < 100.f) velocity.x = 100.f - x;
+  if (x > 1500.f) velocity.x = 1500.f - x;
   float y = boid.getPosition().y;
-  if (y < 100.f) velocity.y = ws * (100.f - y);
-  if (y > 800.f) velocity.y = ws * (800.f - y);
+  if (y < 100.f) velocity.y = 100.f - y;
+  if (y > 800.f) velocity.y = 800.f - y;
   return velocity;
 }
 
-void bd::speedLimit(Boid& b, float ms) {
+void bd::speedLimit(Boid& b, float maximum) {
   float actualSpeed = bd::norm(b.getVelocity());
-  if (actualSpeed > ms) {
-    float red = ms / actualSpeed;
-    b.setVelocity(b.getVelocity() * red);
+  if (actualSpeed > maximum) {
+    float scaling = maximum / actualSpeed;
+    b.setVelocity(b.getVelocity() * scaling);
   }
 }
 
