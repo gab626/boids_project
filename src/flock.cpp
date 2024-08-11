@@ -3,7 +3,6 @@
 #include <algorithm>
 #include <functional>
 #include <iostream>
-#include <nanoflann.hpp>  // da provare e testare
 #include <numeric>
 #include <vector>
 
@@ -17,73 +16,76 @@ using bd::Flock;
 Flock::Flock() {}
 
 Flock::Flock(sf::Color color) {
-  flock_.resize(par_.N);
+  flock_.resize(parameters_.numberBoids);
   std::generate(flock_.begin(), flock_.end(), [&]() { return Boid(color); });
 }
 
 Flock::~Flock() {}
 
-int Flock::getN() const { return par_.N; }
+int Flock::getNumberBoids() const { return parameters_.numberBoids; }
 
 std::vector<Boid> Flock::getFlock() const { return flock_; }
 
-void Flock::updateFlock(std::vector<Boid>& newValues) {
-  std::move(newValues.begin(), newValues.end(), flock_.begin());
+void Flock::updateFlock(std::vector<Boid>& newBoids) {
+  std::move(newBoids.begin(), newBoids.end(), flock_.begin());
   std::for_each(flock_.begin(), flock_.end(),
-                [&](Boid& b) {  // cattura con this? come funziona?
-                  bd::speedLimit(b, par_.maxSpeed);
+                [&](Boid& boid) {  // cattura con this? come funziona?
+                  bd::speedLimit(boid, parameters_.maxSpeed);
                 });
 }
 
-void Flock::saveStatistics(float distanceMean = 0.f, float distanceStd = 0.f,
+/* void Flock::saveStatistics(float distanceMean = 0.f, float distanceStd = 0.f,
                            float speedMean = 0.f, float speedStd = 0.f) {
   statistics_.distanceMean = distanceMean;
   statistics_.distanceStandardDeviation = distanceStd;
   statistics_.speedMean = speedMean;
   statistics_.speedStandardDeviation = speedStd;
-}
+} */
 
-void Flock::printStatistics() {  // cout stampa in int?
+/* void Flock::printStatistics() {  // cout stampa in int?
   std::cout << "Distance mean: " << statistics_.distanceMean
             << "      Distance std: " << statistics_.distanceStandardDeviation
             << "\nSpeed mean: " << statistics_.speedMean
             << "      Speed std: " << statistics_.speedStandardDeviation
             << '\n';
-}
+} */
 
 void Flock::evolve() {
-  std::vector<Boid> newValues;
-  std::vector<float> distances;
-  std::vector<float> speeds;
-  // newValues.resize(par_.N);
-  // std::transform(flock_.begin(), flock_.end(), newValues_.begin(), []() {});
+  std::vector<Boid> newBoids;
+  // std::vector<float> distances;
+  // std::vector<float> speeds;
   for (Boid const& j : flock_) {  // CREARE QUAD TREE PER MIGLIORARE QUA
-    boidPointers nearIndex;
-    boidPointers separationIndex;
+    boidPointers nearBoidsPointers;
+    boidPointers separationBoidsPointers;
     for (Boid& i : flock_) {
       if (&i != &j) {
         float distance = bd::distance(j, i);
-        if (distance < par_.d) nearIndex.push_back(&i);
-        if (distance < par_.ds) separationIndex.push_back(&i);
-        distances.push_back(distance);
+        if (distance < parameters_.distance) nearBoidsPointers.push_back(&i);
+        if (distance < parameters_.distanceSeparation)
+          separationBoidsPointers.push_back(&i);
+        // distances.push_back(distance);
       }
     }
 
-    vector2 v1 = bd::separationVelocity(par_.s, separationIndex, j);
-    vector2 v2 = bd::alignmentVelocity(par_.a, nearIndex, j);
-    vector2 v3 = bd::cohesionVelocity(par_.c, nearIndex, j);
-    vector2 vw = bd::closedSpace(j);
+    vector2 separationVelocity = bd::separationVelocity(
+        parameters_.separationCoefficient, separationBoidsPointers, j);
+    vector2 alignmentVelocity = bd::alignmentVelocity(
+        parameters_.alignmentCoefficient, nearBoidsPointers, j);
+    vector2 cohesionVelocity = bd::cohesionVelocity(
+        parameters_.cohesionCoefficient, nearBoidsPointers, j);
+    vector2 wallsVelocity = bd::closedSpace(j);
 
-    auto newPosition = j.getPosition() + (j.getVelocity() * par_.deltaT);
-    auto newVelocity = j.getVelocity() + v1 + v2 + v3 + vw;
+    vector2 newPosition =
+        j.getPosition() + (j.getVelocity() * parameters_.deltaTime);
+    vector2 newVelocity = j.getVelocity() + separationVelocity +
+                          alignmentVelocity + cohesionVelocity + wallsVelocity;
 
-    speeds.push_back(bd::norm(newVelocity));
+    // speeds.push_back(bd::norm(newVelocity));
 
-    newValues.push_back(
-        {newPosition, newVelocity, j.getShape().getFillColor()});
+    newBoids.push_back({newPosition, newVelocity, j.getShape().getFillColor()});
   }
 
-  float distanceMean = bd::mean(distances);
+  /* float distanceMean = bd::mean(distances);
   float speedMean = bd::mean(speeds);
   std::for_each(distances.begin(), distances.end(), [=](float v) {
     return (v - distanceMean) * (v - distanceMean);
@@ -91,9 +93,9 @@ void Flock::evolve() {
   std::for_each(speeds.begin(), speeds.end(),
                 [=](float v) { return (v - speedMean) * (v - speedMean); });
   float distanceStd = bd::standardDeviation(distances);
-  float speedStd = bd::standardDeviation(speeds);
+  float speedStd = bd::standardDeviation(speeds); */
 
-  Flock::saveStatistics(distanceMean, distanceStd, speedMean, speedStd);
+  // Flock::saveStatistics(distanceMean, distanceStd, speedMean, speedStd);
   // Flock::printStatistics();
-  Flock::updateFlock(newValues);
+  Flock::updateFlock(newBoids);
 }
