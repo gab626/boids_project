@@ -17,16 +17,16 @@ class Boid {
  public:
   Boid();
   Boid(sf::Color);
-  Boid(vector2 const&, vector2 const&, sf::Color);
+  Boid(const vector2&, const vector2&, const sf::Color&);
   ~Boid();
   vector2 getPosition() const;
   vector2 getVelocity() const;
   sf::ConvexShape getShape() const;
-  void setPosition(vector2 const&);
-  void setVelocity(vector2 const&);
+  void setPosition(const vector2&);
+  void setVelocity(const vector2&);
   void setPositionX(float);
   void setPositionY(float);
-  void setShapePosition(vector2 const&);
+  void setShapePosition(const vector2&);
 };
 
 }  // namespace bd

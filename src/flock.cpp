@@ -11,12 +11,14 @@
 
 using bd::Boid;
 using bd::Flock;
+// using bd::Quadtree;
+// using bd::Rectangle;
 
 Flock::Flock() {}
 
-Flock::Flock(sf::Color color) : color_{color} {
+Flock::Flock(sf::Color color) {
   flock_.resize(par_.N);
-  std::generate(flock_.begin(), flock_.end(), [=]() { return Boid(color_); });
+  std::generate(flock_.begin(), flock_.end(), [&]() { return Boid(color); });
 }
 
 Flock::~Flock() {}
@@ -29,7 +31,7 @@ void Flock::updateFlock(std::vector<Boid>& newValues) {
   std::move(newValues.begin(), newValues.end(), flock_.begin());
   std::for_each(flock_.begin(), flock_.end(),
                 [&](Boid& b) {  // cattura con this? come funziona?
-                  // bd::speedLimit(b, par_.maxSpeed);
+                  bd::speedLimit(b, par_.maxSpeed);
                 });
 }
 
@@ -45,7 +47,8 @@ void Flock::printStatistics() {  // cout stampa in int?
   std::cout << "Distance mean: " << statistics_.distanceMean
             << "      Distance std: " << statistics_.distanceStandardDeviation
             << "\nSpeed mean: " << statistics_.speedMean
-            << "      Speed std: " << statistics_.speedStandardDeviation << '\n';
+            << "      Speed std: " << statistics_.speedStandardDeviation
+            << '\n';
 }
 
 void Flock::evolve() {
@@ -76,7 +79,8 @@ void Flock::evolve() {
 
     speeds.push_back(bd::norm(newVelocity));
 
-    newValues.push_back({newPosition, newVelocity, j.getShape().getFillColor()});
+    newValues.push_back(
+        {newPosition, newVelocity, j.getShape().getFillColor()});
   }
 
   float distanceMean = bd::mean(distances);

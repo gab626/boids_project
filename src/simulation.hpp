@@ -11,8 +11,6 @@ class Simulation {
  private:
   sf::RenderWindow mainWindow_;
   bd::Flock greenFlock_;
-  bd::Flock redFlock_;
-  bd::Flock blueFlock_;
 
  public:
   Simulation();

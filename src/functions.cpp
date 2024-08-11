@@ -47,7 +47,6 @@ vector2 bd::separationVelocity(float s, const boidPointers& tooNear,
 vector2 bd::alignmentVelocity(float a, const boidPointers& near,
                               const Boid& boid) {
   float nearSize = near.size();
-  float scaling{};
   vector2 velocity{};
   if (nearSize >= 1) {
     vector2 mean = std::accumulate(near.begin(), near.end(), vector2{},
@@ -55,8 +54,7 @@ vector2 bd::alignmentVelocity(float a, const boidPointers& near,
                                      return p + b->getVelocity();
                                    }) /
                    nearSize;
-    scaling = bd::norm(boid.getVelocity()) / bd::norm(mean);
-    velocity = (mean * scaling - boid.getVelocity());
+    velocity = mean - boid.getVelocity();
   }
   return velocity * a;  // implementazione simile a v3
 }

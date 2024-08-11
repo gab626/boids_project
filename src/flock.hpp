@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "boid.hpp"
+// #include "quadtree.hpp"
 
 namespace bd {
 
@@ -16,21 +17,21 @@ struct Statistics {
 };
 
 struct Parameters {  // rivedere nomi parametri?
-  float d = 80.f;   // parametri temporanei fissati
-  float ds = 20.f;
-  float s = 1.f;
-  float a = 0.03f;
-  float c = 0.01f;
-  int N = 100;
-  float maxSpeed = 5000.f;
-  float deltaT = .002f;
+  float d = 100.f;   // parametri temporanei fissati
+  float ds = 30.f;
+  float s = 3.f;
+  float a = 0.05f;
+  float c = 0.3f;
+  int N = 500;
+  float maxSpeed = 3000.f;
+  float deltaT = .001f;
 };
 
 class Flock {
  private:
   Parameters par_;
   Statistics statistics_;
-  sf::Color color_;
+  // Quadtree quadtree_;
   std::vector<Boid> flock_;
   void updateFlock(std::vector<Boid>&);  // forse riaggiungere oldBoid vector
   void saveStatistics(float, float, float, float);

@@ -12,20 +12,23 @@ void Boid::setupShape(sf::Color color) {
   boidShape_.setPoint(3, vector2(2.f, 4.f));
   boidShape_.setFillColor(color);
   boidShape_.setOrigin({2.f, 2.5f});
-  boidShape_.setScale(2.f, 2.f);
+  boidShape_.setScale(1.5f, 1.5f);
 }
 
 Boid::Boid() {}
 
 Boid::Boid(sf::Color color)
-    : position_{bd::randomFloat(0.f, 1600.f), bd::randomFloat(0.f, 900.f)},
+    : position_{bd::randomFloat(0.f, 1600.f),
+                bd::randomFloat(0.f, 900.f)},  // meglio spostare questa
+                                               // costruzione specifica in Flock
       velocity_{bd::randomVelocity(1000.f, 2000.f)} {
   Boid::setupShape(color);
   boidShape_.setPosition(position_);
   boidShape_.setRotation(bd::orientation(velocity_));
 }
 
-Boid::Boid(vector2 const& position, vector2 const& velocity, sf::Color color)
+Boid::Boid(const vector2& position, const vector2& velocity,
+           const sf::Color& color)
     : position_{position}, velocity_{velocity} {
   Boid::setupShape(color);
   boidShape_.setPosition(position);
@@ -40,14 +43,14 @@ vector2 Boid::getVelocity() const { return velocity_; }
 
 sf::ConvexShape Boid::getShape() const { return boidShape_; }
 
-void Boid::setPosition(vector2 const& position) { position_ = position; }
+void Boid::setPosition(const vector2& position) { position_ = position; }
 
-void Boid::setVelocity(vector2 const& velocity) { velocity_ = velocity; }
+void Boid::setVelocity(const vector2& velocity) { velocity_ = velocity; }
 
 void Boid::setPositionX(float x) { position_.x = x; }
 
 void Boid::setPositionY(float y) { position_.y = y; }
 
-void Boid::setShapePosition(vector2 const& position) {
+void Boid::setShapePosition(const vector2& position) {
   boidShape_.setPosition(position);
 }
