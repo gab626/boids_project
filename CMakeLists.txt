@@ -1,25 +1,38 @@
 cmake_minimum_required(VERSION 3.16)
-project(BoidsProject LANGUAGES CXX)
+project(BoidsProject VERSION 0.1.0)
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-include(FetchContent)
-FetchContent_Declare(SFML
-    GIT_REPOSITORY https://github.com/SFML/SFML.git
-    GIT_TAG 2.6.x)
-FetchContent_MakeAvailable(SFML)
+# richiedi l'uso di C++17, senza estensioni non-standard offerte dal compilatore usato 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS ON)
 
-add_executable(BoidsProject main.cpp functions.cpp boid.cpp quadtree.cpp flock.cpp simulation.cpp)
-target_link_libraries(BoidsProject PRIVATE sfml-graphics)
-target_compile_features(BoidsProject PRIVATE cxx_std_17)
+# abilita warning
+string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra")
 
-if(WIN32)
-    add_custom_command(
-        TARGET BoidsProject
-        COMMENT "Copy OpenAL DLL"
-        PRE_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SFML_SOURCE_DIR}/extlibs/bin/$<IF:$<EQUAL:${CMAKE_SIZEOF_VOID_P},8>,x64,x86>/openal32.dll $<TARGET_FILE_DIR:BoidsProject>
-        VERBATIM)
+# abilita l'address sanitizer e l'undefined-behaviour sanitizer in debug mode
+string(APPEND CMAKE_CXX_FLAGS_DEBUG " -fsanitize=address,undefined -fno-omit-frame-pointer")
+string(APPEND CMAKE_EXE_LINKER_FLAGS_DEBUG " -fsanitize=address,undefined -fno-omit-frame-pointer")
+
+find_package(SFML COMPONENTS system window graphics REQUIRED)
+# find_package(TGUI REQUIRED)
+
+add_executable(BoidsProject src/boid.cpp src/functions.cpp src/flock.cpp src/simulation.cpp src/main.cpp)
+
+target_link_libraries(BoidsProject PRIVATE sfml-system sfml-window sfml-graphics)
+
+if (WIN32)
+    target_link_libraries(BoidsProject PRIVATE sfml-main)
 endif()
 
-install(TARGETS BoidsProject)
+# Debugging output
+message(STATUS "CMake CXX Flags: ${CMAKE_CXX_FLAGS}")
+message(STATUS "CMake CXX Debug Flags: ${CMAKE_CXX_FLAGS_DEBUG}")
+message(STATUS "CMake Exe Linker Debug Flags: ${CMAKE_EXE_LINKER_FLAGS_DEBUG}")
+
+# if (BUILD_TESTING)
+
+# ...
+
+# endif()
