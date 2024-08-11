@@ -19,7 +19,7 @@ void Simulation::operator()() {
 
     mainWindow_.clear(sf::Color::Black);
 
-    for (int i{}; i < greenFlock_.getN(); i++) {
+    for (int i{}; i < greenFlock_.getNumberBoids(); i++) {
       mainWindow_.draw(greenFlock_.getFlock()[i].getShape());
     }
     greenFlock_.evolve();
