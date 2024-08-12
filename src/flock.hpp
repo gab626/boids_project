@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "boid.hpp"
+#include "cell.hpp"
 // #include "quadtree.hpp"
 
 namespace bd {
@@ -33,6 +34,8 @@ class Flock {
   // Statistics statistics_;
   // Quadtree quadtree_;
   std::vector<Boid> flock_;
+  std::vector<Cell> grid_;
+  void setupGrid();
   // void saveStatistics(float, float, float, float);
   // void printStatistics();
 

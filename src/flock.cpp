@@ -13,11 +13,32 @@ using bd::Flock;
 // using bd::Quadtree;
 // using bd::Rectangle;
 
+void Flock::setupGrid() {
+  grid_.resize(144);
+  vector2 center{50.f, 50.f};
+  // int key{0};
+  std::generate(grid_.begin(), grid_.end(), [&]() {
+    Cell cell;
+    cell.setCenter(center);
+    // cell.setKey(key);
+    center.x += 100.f;
+    if (center.x > 1600.f) {
+      center.x = 50.f;
+      center.y += 100.f;
+    }
+    // key++;
+    return cell;
+  });
+}
+
 Flock::Flock() {}
 
 Flock::Flock(sf::Color color) {
   flock_.resize(parameters_.numberBoids);
   std::generate(flock_.begin(), flock_.end(), [&]() { return Boid(color); });
+  Flock::setupGrid();
+  std::for_each(flock_.begin(), flock_.end(),
+                [&](Boid& boid) { bd::linkBoidsToCells(boid, grid_); });
 }
 
 Flock::~Flock() {}
