@@ -3,6 +3,7 @@
 #include "functions.hpp"
 
 using bd::Boid;
+using bd::Cell;
 
 void Boid::setupShape(sf::Color color) {
   boidShape_.setPointCount(4);
@@ -18,16 +19,16 @@ void Boid::setupShape(sf::Color color) {
 Boid::Boid() {}
 
 Boid::Boid(sf::Color color)
-    : position_{bd::randomFloat(0.f, 1600.f),
-                bd::randomFloat(0.f, 900.f)},  // meglio spostare questa
-                                               // costruzione specifica in Flock
-      velocity_{bd::randomVelocity(1000.f, 2000.f)} {
+    : position_{bd::randomFloat(0.f, 1600.f), bd::randomFloat(0.f, 900.f)},
+      velocity_{bd::randomVelocity(1000.f, 2000.f)},
+      cellPointer_{nullptr} {
   Boid::setupShape(color);
   boidShape_.setPosition(position_);
   boidShape_.setRotation(bd::orientation(velocity_));
 }
 
-Boid::Boid(const vector2& position, const vector2& velocity,
+Boid::Boid(const vector2& position,
+           const vector2& velocity,  // manca inizializzazione cellPointer_
            const sf::Color& color)
     : position_{position}, velocity_{velocity} {
   Boid::setupShape(color);
@@ -43,6 +44,8 @@ vector2 Boid::getVelocity() const { return velocity_; }
 
 sf::ConvexShape Boid::getShape() const { return boidShape_; }
 
+Cell* Boid::getCellPointer() const { return cellPointer_; }
+
 void Boid::setPosition(const vector2& position) { position_ = position; }
 
 void Boid::setVelocity(const vector2& velocity) { velocity_ = velocity; }
@@ -54,3 +57,5 @@ void Boid::setPositionY(float y) { position_.y = y; }
 void Boid::setShapePosition(const vector2& position) {
   boidShape_.setPosition(position);
 }
+
+void Boid::setCellPointer(Cell* cellPointer) { cellPointer_ = cellPointer; }
