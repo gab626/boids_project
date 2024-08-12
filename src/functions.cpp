@@ -8,6 +8,7 @@
 #include <random>
 
 using bd::Boid;
+using bd::Cell;
 
 float bd::norm(const vector2& vector) {
   return std::sqrt(vector.x * vector.x + vector.y * vector.y);
@@ -35,9 +36,26 @@ float bd::orientation(const vector2& velocity) {
                         // capito benissimo come funziona, rivedere
 }
 
+bool bd::isBoidInCell(const vector2& position, const Cell& cell) {
+  return (position.x >= cell.getCenter().x - cell.getWidth() &&
+          position.x <= cell.getCenter().x + cell.getWidth() &&
+          position.y >= cell.getCenter().y - cell.getHeight() &&
+          position.y <= cell.getCenter().y + cell.getHeight());
+}
+
+void bd::linkBoidsToCells(Boid& boid, std::vector<Cell>& grid) {
+  auto cellIterator =
+      std::find_if(grid.begin(), grid.end(), [&](const Cell& cell) {
+        return bd::isBoidInCell(boid.getPosition(), cell);
+      });
+  Cell* cellPointer = &(*cellIterator);  // non mi piace
+  boid.setCellPointer(cellPointer);
+  cellPointer->insertBoid(boid);
+}
+
 vector2 bd::separationVelocity(float s, const boidPointers& tooNear,
                                const Boid& boid) {
-  float tooNearSize = tooNear.size();
+  float tooNearSize = tooNear.size();  // int?
   return std::accumulate(
              tooNear.begin(), tooNear.end(), boid.getPosition() * tooNearSize,
              [](const vector2& p, Boid* b) { return p - b->getPosition(); }) *
@@ -46,7 +64,7 @@ vector2 bd::separationVelocity(float s, const boidPointers& tooNear,
 
 vector2 bd::alignmentVelocity(float a, const boidPointers& near,
                               const Boid& boid) {
-  float nearSize = near.size();
+  float nearSize = near.size();  // int?
   vector2 velocity{};
   if (nearSize >= 1) {
     vector2 mean = std::accumulate(near.begin(), near.end(), vector2{},
@@ -61,7 +79,7 @@ vector2 bd::alignmentVelocity(float a, const boidPointers& near,
 
 vector2 bd::cohesionVelocity(float c, const boidPointers& near,
                              const Boid& boid) {
-  float nearSize = near.size();
+  float nearSize = near.size();  // int?
   vector2 velocity{};
   if (nearSize >= 1) {
     vector2 center = std::accumulate(

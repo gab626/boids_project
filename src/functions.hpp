@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "boid.hpp"
+#include "cell.hpp"
 
 using boidPointers = std::vector<bd::Boid*>;
 
@@ -19,6 +20,10 @@ float mean(std::vector<float>);  // const&?
 float standardDeviation(std::vector<float>);  // const&?
 
 float orientation(const vector2&);  // idem qua
+
+bool isBoidInCell(const vector2&, const Cell&);
+
+void linkBoidsToCells(Boid&, std::vector<Cell>&);  // const?
 
 vector2 separationVelocity(float, const boidPointers&, const Boid&);
 
