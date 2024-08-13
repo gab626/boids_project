@@ -18,7 +18,7 @@ string(APPEND CMAKE_EXE_LINKER_FLAGS_DEBUG " -fsanitize=address,undefined -fno-o
 find_package(SFML COMPONENTS system window graphics REQUIRED)
 # find_package(TGUI REQUIRED)
 
-add_executable(BoidsProject src/boid.cpp src/cell.cpp src/functions.cpp src/flock.cpp src/simulation.cpp src/main.cpp)
+add_executable(BoidsProject src/boid.cpp src/grid.cpp src/functions.cpp src/flock.cpp src/simulation.cpp src/main.cpp)
 
 target_link_libraries(BoidsProject PRIVATE sfml-system sfml-window sfml-graphics)
 
