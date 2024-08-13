@@ -1,12 +1,9 @@
 #ifndef FLOCK_HPP
 #define FLOCK_HPP
 
-#include <array>
-#include <vector>
+#include "grid.hpp"
 
-#include "boid.hpp"
-#include "cell.hpp"
-// #include "quadtree.hpp"
+using boidVector = std::vector<bd::Boid>;
 
 namespace bd {
 
@@ -17,13 +14,13 @@ namespace bd {
   float speedStandardDeviation{};
 }; */
 
-struct Parameters {        // rivedere nomi parametri?
-  float distance = 100.f;  // parametri temporanei fissati
+struct Parameters {
+  float distance = 100.f;  // parametri temporaneamente fissati
   float distanceSeparation = 30.f;
   float separationCoefficient = 3.f;
   float alignmentCoefficient = 0.05f;
   float cohesionCoefficient = 0.3f;
-  int numberBoids = 500;
+  int numberBoids = 200;
   float maxSpeed = 3000.f;
   float deltaTime = .001f;
 };
@@ -32,10 +29,8 @@ class Flock {
  private:
   Parameters parameters_;
   // Statistics statistics_;
-  // Quadtree quadtree_;
-  std::vector<Boid> flock_;
-  std::vector<Cell> grid_;
-  void setupGrid();
+  boidVector flock_;
+  Grid grid_;
   // void saveStatistics(float, float, float, float);
   // void printStatistics();
 
@@ -44,8 +39,8 @@ class Flock {
   Flock(sf::Color);
   ~Flock();
   int getNumberBoids() const;
-  std::vector<Boid> getFlock() const;  // non mi piace
-  void updateFlock(std::vector<Boid>&);
+  boidVector getFlock() const;  // non mi piace
+  void updateFlock(boidVector&);
   void evolve();
 };
 

@@ -1,13 +1,8 @@
 #ifndef FUNCTION_HPP
 #define FUNCTION_HPP
 
-#include <array>
-#include <vector>
-
 #include "boid.hpp"
-#include "cell.hpp"
-
-using boidPointers = std::vector<bd::Boid*>;
+#include "grid.hpp"
 
 namespace bd {
 
@@ -21,9 +16,19 @@ float standardDeviation(std::vector<float>);  // const&?
 
 float orientation(const vector2&);  // idem qua
 
-bool isBoidInCell(const vector2&, const Cell&);
+void toroidalSpace(vector2&);
 
-void linkBoidsToCells(Boid&, std::vector<Cell>&);  // const?
+bool isInCell(const vector2&, const Cell&);
+
+void linkBoidsToCells(Boid&, Grid&);
+
+std::vector<vector2> findNearCellsCenters(const Cell&);
+
+cellPointers findNearCellsPointers(const Cell&, const Grid&);
+
+boidPointers findNearBoids(const Boid&, float);
+
+// boidPointers findSeparationBoids(const boidPointers&, float);
 
 vector2 separationVelocity(float, const boidPointers&, const Boid&);
 

@@ -1,53 +1,33 @@
 #include "flock.hpp"
 
 #include <algorithm>
-#include <functional>
+#include <cassert>
+#include <functional>  //
 #include <iostream>
-#include <numeric>
-#include <vector>
+#include <numeric>  //
 
 #include "functions.hpp"
 
 using bd::Boid;
 using bd::Flock;
-// using bd::Quadtree;
-// using bd::Rectangle;
-
-void Flock::setupGrid() {
-  grid_.resize(144);
-  vector2 center{50.f, 50.f};
-  // int key{0};
-  std::generate(grid_.begin(), grid_.end(), [&]() {
-    Cell cell;
-    cell.setCenter(center);
-    // cell.setKey(key);
-    center.x += 100.f;
-    if (center.x > 1600.f) {
-      center.x = 50.f;
-      center.y += 100.f;
-    }
-    // key++;
-    return cell;
-  });
-}
 
 Flock::Flock() {}
 
 Flock::Flock(sf::Color color) {
   flock_.resize(parameters_.numberBoids);
   std::generate(flock_.begin(), flock_.end(), [&]() { return Boid(color); });
-  Flock::setupGrid();
   std::for_each(flock_.begin(), flock_.end(),
                 [&](Boid& boid) { bd::linkBoidsToCells(boid, grid_); });
+  assert(grid_.getCellVector().size() == 144);
 }
 
 Flock::~Flock() {}
 
 int Flock::getNumberBoids() const { return parameters_.numberBoids; }
 
-std::vector<Boid> Flock::getFlock() const { return flock_; }
+boidVector Flock::getFlock() const { return flock_; }
 
-void Flock::updateFlock(std::vector<Boid>& newBoids) {
+void Flock::updateFlock(boidVector& newBoids) {
   std::move(newBoids.begin(), newBoids.end(), flock_.begin());
   std::for_each(flock_.begin(), flock_.end(),
                 [&](Boid& boid) {  // cattura con this? come funziona?
@@ -72,13 +52,15 @@ void Flock::updateFlock(std::vector<Boid>& newBoids) {
 } */
 
 void Flock::evolve() {
-  std::vector<Boid> newBoids;
+  boidVector newBoids;
   // std::vector<float> distances;
   // std::vector<float> speeds;
-  for (Boid const& j : flock_) {  // CREARE QUAD TREE PER MIGLIORARE QUA
-    boidPointers nearBoidsPointers;
-    boidPointers separationBoidsPointers;
-    for (Boid& i : flock_) {
+  for (Boid const& j : flock_) {
+    boidPointers nearBoidsPointers = bd::findNearBoids(j, parameters_.distance);
+    boidPointers separationBoidsPointers = bd::findNearBoids(
+        j, parameters_.distanceSeparation);  // può essere migliorato anziché
+                                             // riutilizzare la stessa funzione
+    /* for (Boid& i : flock_) {
       if (&i != &j) {
         float distance = bd::distance(j, i);
         if (distance < parameters_.distance) nearBoidsPointers.push_back(&i);
@@ -87,7 +69,7 @@ void Flock::evolve() {
         // distances.push_back(distance);
       }
     }
-
+ */
     vector2 separationVelocity = bd::separationVelocity(
         parameters_.separationCoefficient, separationBoidsPointers, j);
     vector2 alignmentVelocity = bd::alignmentVelocity(

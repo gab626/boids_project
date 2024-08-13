@@ -1,20 +1,21 @@
 #include "functions.hpp"
 
-#include <math.h>
-
 #include <algorithm>
+#include <cassert>
 #include <cmath>
 #include <numeric>
 #include <random>
 
 using bd::Boid;
 using bd::Cell;
+using bd::Grid;
 
 float bd::norm(const vector2& vector) {
   return std::sqrt(vector.x * vector.x + vector.y * vector.y);
 }
 
-float bd::distance(const Boid& firstBoid, const Boid& secondBoid) {
+float bd::distance(const Boid& firstBoid,
+                   const Boid& secondBoid) {  // rimettere toroidal distance?
   return bd::norm(firstBoid.getPosition() - secondBoid.getPosition());
 }
 
@@ -32,26 +33,116 @@ float bd::orientation(const vector2& velocity) {
   float angleRadians =
       std::atan2(velocity.y, velocity.x) + M_PI_2f;  // M_PI? è il miglior modo?
   float angleDegrees = angleRadians * 360.f / (2.f * M_PIf);
-  return angleDegrees;  // ho dovuto togliere il meno, mi sa che non avevo
-                        // capito benissimo come funziona, rivedere
+  return angleDegrees;
 }
 
-bool bd::isBoidInCell(const vector2& position, const Cell& cell) {
+void bd::toroidalSpace(vector2& position) {  // potrebbe non funzionare così
+  /* if (position.x < 0) {
+    position.x += 1600.f;
+  }
+  if (position.x > 1600.f) {
+    position.x -= 1600.f;
+  }
+  if (position.y < 0) {
+    position.y += 900.f;
+  }
+  if (position.y > 900.f) {
+    position.y -= 900.f;
+  } */
+  position.x = std::fmod(position.x + 1600.f, 1600.f);
+  assert(position.x >= 0.f && position.x <= 1600.f);
+  position.y = std::fmod(position.y + 900.f, 900.f);
+  assert(position.y >= 0.f && position.y <= 900.f);
+}
+
+bool bd::isInCell(const vector2& position, const Cell& cell) {
   return (position.x >= cell.getCenter().x - cell.getWidth() &&
           position.x <= cell.getCenter().x + cell.getWidth() &&
           position.y >= cell.getCenter().y - cell.getHeight() &&
           position.y <= cell.getCenter().y + cell.getHeight());
 }
 
-void bd::linkBoidsToCells(Boid& boid, std::vector<Cell>& grid) {
-  auto cellIterator =
-      std::find_if(grid.begin(), grid.end(), [&](const Cell& cell) {
-        return bd::isBoidInCell(boid.getPosition(), cell);
-      });
+void bd::linkBoidsToCells(Boid& boid, Grid& grid) {
+  cellVector gridCells = grid.getCellVector();
+  assert(gridCells.size() == 144);
+  vector2 boidPosition = boid.getPosition();
+  auto cellIterator = std::find_if(
+      gridCells.begin(), gridCells.end(),
+      [&](const Cell& cell) { return bd::isInCell(boidPosition, cell); });
+  assert(cellIterator != gridCells.end());
   Cell* cellPointer = &(*cellIterator);  // non mi piace
   boid.setCellPointer(cellPointer);
   cellPointer->insertBoid(boid);
 }
+
+std::vector<vector2> bd::findNearCellsCenters(const Cell& cell) {
+  vector2 position = cell.getCenter();
+  std::vector<vector2> nearCellsCenters;
+  assert(nearCellsCenters.empty());
+  nearCellsCenters.push_back(position + vector2{0.f, -100.f});     // north
+  nearCellsCenters.push_back(position + vector2{0.f, 100.f});      // south
+  nearCellsCenters.push_back(position + vector2{-100.f, 0.f});     // west
+  nearCellsCenters.push_back(position + vector2{100.f, 0.f});      // east
+  nearCellsCenters.push_back(position + vector2{100.f, -100.f});   // north-east
+  nearCellsCenters.push_back(position + vector2{-100.f, -100.f});  // north-west
+  nearCellsCenters.push_back(position + vector2{100.f, 100.f});    // south-east
+  nearCellsCenters.push_back(position + vector2{-100.f, 100.f});   // south-west
+  std::for_each(nearCellsCenters.begin(), nearCellsCenters.end(),
+                [](vector2& position) { bd::toroidalSpace(position); });
+  assert(nearCellsCenters.size() == 8);
+  return nearCellsCenters;
+}
+
+cellPointers bd::findNearCellsPointers(const Cell& cell, const Grid& grid) {
+  std::vector<vector2> nearCellsCenters = bd::findNearCellsCenters(cell);
+  assert(nearCellsCenters.size() == 8);
+  cellVector gridCells = grid.getCellVector();
+  assert(gridCells.size() == 144);
+  cellPointers nearCellsPointers;
+  assert(nearCellsPointers.empty());
+  // nearCellsPointers.resize(8);
+  std::for_each(
+      nearCellsCenters.begin(),  // provare poi con transform
+      nearCellsCenters.end(),    // NESTED ALGORITHMS ???
+      [&](const vector2& cellCenter) {
+        auto cellIterator = std::find_if(
+            gridCells.begin(), gridCells.end(),
+            [&](const Cell& cell) { return bd::isInCell(cellCenter, cell); });
+        assert(cellIterator != gridCells.end());
+        Cell* cellPointer = &(*cellIterator);
+        //  return cellPointer;
+        nearCellsPointers.push_back(cellPointer);
+      });
+  assert(nearCellsPointers.size() == 8);
+  return nearCellsPointers;
+}
+
+boidPointers bd::findNearBoids(const Boid& mainBoid, float distance) {
+  Cell* mainCell = mainBoid.getCellPointer();
+  cellPointers nearCells = mainCell->getNearCells();
+  assert(nearCells.size() == 8);
+  nearCells.push_back(mainCell);
+  assert(nearCells.size() == 9);
+  boidPointers nearBoids;
+  std::for_each(nearCells.begin(), nearCells.end(), [&](Cell* cell) {
+    boidPointers boidsToCheck = cell->getBoidsInCell();
+    std::for_each(boidsToCheck.begin(), boidsToCheck.end(),
+                  [&](Boid* otherBoid) {
+                    if (&mainBoid != otherBoid) {
+                      if (bd::distance(mainBoid, *otherBoid) < distance) {
+                        nearBoids.push_back(otherBoid);
+                      }
+                    }
+                  });
+  });
+  return nearBoids;
+}
+
+/* boidPointers bd::findSeparationBoids(const boidPointers& nearBoids,
+                                     float separationDistance) {
+  boidPointers separationBoids;
+  std::for_each(nearBoids.begin(), nearBoids.end(), []() {});
+} */
 
 vector2 bd::separationVelocity(float s, const boidPointers& tooNear,
                                const Boid& boid) {
